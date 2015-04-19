@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>Pacroids</title>
+    <!--eta content='width=device-width, initial-scale=1.0, maximum-scale=1.00, user-scalable=0' name='viewport' /-->
+
+    <script type="text/javascript" src = "./js/simple_game.js"></script>
+    <script type="text/javascript" src = "./js/simple_game_extension.js"></script>
+    <script type="text/javascript" src = "./js/init-info.js"></script>
+    <script type="text/javascript" src = "./js/pacman.js"></script>
+    <script type="text/javascript" src = "./js/maze.js"></script>
+    <script type="text/javascript">
+        var scene;
+        var pacman;
+        var pacmanConfig;
+        var maze;
+
+        function init(){
+
+            pacmanConfig = new PacmanConfig();
+            scene = new Scene();
+            scene.setSize(pacmanConfig.SCREEN_WIDTH, pacmanConfig.SCREEN_HEIGHT);
+            scene.setBG('#000000');
+
+            maze = new Maze(scene);
+            pacman = Pacman(scene, maze);
+
+            scene.start();
+
+            pacman.init();
+            maze.init();
+        }
+
+        function update(){
+            scene.clear();
+
+            pacman.checkKeys();
+
+            maze.update();
+
+            pacman.update();
+            pacman.displayPosition();
+        }
+
+
+    </script>
+</head>
+<body onload = "init()">
+</body>
+</html>
