@@ -13,7 +13,7 @@
 //variable holding key being pressed
 var currentKey = null;
 var keysDown = new Array(256);
-var virtKeys = false;
+var virtKeys = true;
 
 function Sprite(scene, imageFile, width, height){
     //core class for game engine
