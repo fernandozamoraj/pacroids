@@ -15,7 +15,7 @@ function Pacman(scene, maze, config){
         if(_joy){
             xOffset = _joy.getDiffX();
             yOffSet = _joy.getDiffY();
-            alert(xOffset);
+            
         }
 
         if(keysDown[K_LEFT] === true || xOffset > 0){
