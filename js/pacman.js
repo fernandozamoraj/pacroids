@@ -12,16 +12,10 @@ function Pacman(scene, maze, config){
         var xOffset = 0;
         var yOffset = 0;
 
-        if(_joy){
-            xOffset = _joy.getDiffX();
-            yOffSet = _joy.getDiffY();
-            
-        }
-
-        if(keysDown[K_LEFT] === true || xOffset > 0){
+        if(keysDown[K_LEFT] === true){
             direction = config.WEST;
         }
-        else if(keysDown[K_RIGHT] === true || xOffset < 0){
+        else if(keysDown[K_RIGHT] === true){
             direction = config.EAST;
         }
         else if(keysDown[K_UP] === true){
@@ -165,23 +159,8 @@ function Pacman(scene, maze, config){
         var fontSize = "25";
         var fontColor = "#ffffff";
         var textValue = "HIGH SCORE        101235        999";
-        var logInfo = "";
-        var diffX = 0;
-        var diffY = 0;
-        if(_joy){
-           logInfo = "_joy is not null";
-           diffY = _joy.getDiffY();
-           diffX = _joy.getDiffX();
-
-           logInfo = logInfo + " diffX/diffY " + diffX.toString() + " " + diffY.toString();
-        }
-        else{
-            logInfo = "_joy is null";
-            logInfo = logInfo + " diffX/diffY " + diffX.toString() + " " + diffY.toString();
-        }
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
-        this.writeText(fontFamily, fontSize, fontColor, logInfo, 26, 40);
 
 
         //this.writeText(fontFamily, fontSize, fontColor, testXYMessage, 20, 60);
