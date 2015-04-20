@@ -15,18 +15,19 @@ function Pacman(scene, maze, config){
         if(_joy){
             xOffset = _joy.getDiffX();
             yOffSet = _joy.getDiffY();
+            alert(xOffset);
         }
 
-        if(keysDown[K_LEFT] || xOffset < 0){
+        if(keysDown[K_LEFT] === true || xOffset > 0){
             direction = config.WEST;
         }
-        if(keysDown[K_RIGHT] || xOffset > 0){
+        else if(keysDown[K_RIGHT] === true || xOffset < 0){
             direction = config.EAST;
         }
-        if(keysDown[K_UP] || yOffset > 0){
+        else if(keysDown[K_UP] === true){
             direction = config.NORTH;
         }
-        if(keysDown[K_DOWN] || yOffset < 0){
+        else if(keysDown[K_DOWN] === true){
             direction = config.SOUTH;
         }
 
