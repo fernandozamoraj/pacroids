@@ -1,7 +1,8 @@
 /**
  * Created by mac on 4/18/15.
  */
-function Maze(scene){
+function Maze(scene, config){
+
 
     var map = [
     [23,17,17,17,17,17,17,17,17,28,17,17,17,17,17,17,17,17,20], //1
@@ -34,16 +35,16 @@ function Maze(scene){
         powerPelletTimer = powerPelletTimer + 1;
 
         if(powerPelletTimer <= 4){
-            tiles[39].setImage(pacmanConfig.POWER_PELLET_SMALL);
-            tiles[55].setImage(pacmanConfig.POWER_PELLET_SMALL);
-            tiles[286].setImage(pacmanConfig.POWER_PELLET_SMALL);
-            tiles[302].setImage(pacmanConfig.POWER_PELLET_SMALL);
+            tiles[39].setImage(config.POWER_PELLET_SMALL);
+            tiles[55].setImage(config.POWER_PELLET_SMALL);
+            tiles[286].setImage(config.POWER_PELLET_SMALL);
+            tiles[302].setImage(config.POWER_PELLET_SMALL);
         }
         else if(powerPelletTimer <= 8){
-            tiles[39].setImage(pacmanConfig.POWER_PELLET_LARGE);
-            tiles[55].setImage(pacmanConfig.POWER_PELLET_LARGE);
-            tiles[286].setImage(pacmanConfig.POWER_PELLET_LARGE);
-            tiles[302].setImage(pacmanConfig.POWER_PELLET_LARGE);
+            tiles[39].setImage(config.POWER_PELLET_LARGE);
+            tiles[55].setImage(config.POWER_PELLET_LARGE);
+            tiles[286].setImage(config.POWER_PELLET_LARGE);
+            tiles[302].setImage(config.POWER_PELLET_LARGE);
         }
     }
 
@@ -86,8 +87,8 @@ function Maze(scene){
     };
 
     this.isValidMove = function(x, y){
-       var row = Math.floor( y/pacmanConfig.TILE_WIDTH);
-       var column = Math.floor( x/pacmanConfig.TILE_WIDTH);
+       var row = Math.floor( y/config.TILE_WIDTH);
+       var column = Math.floor( x/config.TILE_WIDTH);
 
         //mid screen tunne
         if(row === 10 && (x < 0 || x > 520))

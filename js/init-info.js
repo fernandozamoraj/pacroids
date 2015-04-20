@@ -19,4 +19,5 @@ function PacmanConfig(){
     this.FONT_FAMILY = "ARIAL";
     this.FONT_SIZE = "30";
     this.FONT_COLOR = "#FFFFFF";
+    this.LEFT_BUTTON_IMAGE = "./img/maze/Tile33.PNG";
 }

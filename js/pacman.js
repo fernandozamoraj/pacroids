@@ -1,24 +1,25 @@
 /**
  * Created by mac on 4/18/15.
  */
-function Pacman(scene, maze){
-    var sprite = new EnhancedSprite(scene, pacmanConfig.PACMAN_FILE_2, 32, 32);
+function Pacman(scene, maze, config){
+    var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
     var animationTimer = 0;
+    var _leftButton;
 
     function getKeyDirection(currentDirection){
         var direction = currentDirection;
 
-        if(keysDown[K_LEFT]){
-            direction = pacmanConfig.WEST;
+        if(keysDown[K_LEFT] || _leftButton.isDown()){
+            direction = config.WEST;
         }
         if(keysDown[K_RIGHT]){
-            direction = pacmanConfig.EAST;
+            direction = config.EAST;
         }
         if(keysDown[K_UP]){
-            direction = pacmanConfig.NORTH;
+            direction = config.NORTH;
         }
         if(keysDown[K_DOWN]){
-            direction = pacmanConfig.SOUTH;
+            direction = config.SOUTH;
         }
 
         return direction;
@@ -26,11 +27,11 @@ function Pacman(scene, maze){
     }
 
     function movingHorizontal(){
-        return (sprite.getMoveAngle() === pacmanConfig.WEST || sprite.getMoveAngle() === pacmanConfig.EAST);
+        return (sprite.getMoveAngle() === config.WEST || sprite.getMoveAngle() === config.EAST);
     }
 
     function movingVertical(){
-        return (sprite.getMoveAngle() === pacmanConfig.NORTH || sprite.getMoveAngle() === pacmanConfig.SOUTH);
+        return (sprite.getMoveAngle() === config.NORTH || sprite.getMoveAngle() === config.SOUTH);
     }
 
     var testXYMessage = '';
@@ -40,17 +41,17 @@ function Pacman(scene, maze){
         var testX = this.x;
         var testY = this.y;
 
-        if(this.getMoveAngle() === pacmanConfig.WEST){
-            testX = this.x - (pacmanConfig.PACMAN_REGULAR_SPEED + 16);
+        if(this.getMoveAngle() === config.WEST){
+            testX = this.x - (config.PACMAN_REGULAR_SPEED + 16);
         }
-        if(this.getMoveAngle() === pacmanConfig.EAST){
-            testX = this.x + (pacmanConfig.PACMAN_REGULAR_SPEED + 16);
+        if(this.getMoveAngle() === config.EAST){
+            testX = this.x + (config.PACMAN_REGULAR_SPEED + 16);
         }
-        if(this.getMoveAngle() === pacmanConfig.NORTH){
-            testY = this.y - (pacmanConfig.PACMAN_REGULAR_SPEED + 16);
+        if(this.getMoveAngle() === config.NORTH){
+            testY = this.y - (config.PACMAN_REGULAR_SPEED + 16);
         }
-        if(this.getMoveAngle() === pacmanConfig.SOUTH){
-            testY = this.y + (pacmanConfig.PACMAN_REGULAR_SPEED + 16);
+        if(this.getMoveAngle() === config.SOUTH){
+            testY = this.y + (config.PACMAN_REGULAR_SPEED + 16);
         }
 
         console.log("testX" + testX);
@@ -59,10 +60,10 @@ function Pacman(scene, maze){
         var fontFamily = "arial";
         var fontSize = "30";
         var fontColor = "#ff0000";
-        var row = Math.floor(testY/pacmanConfig.TILE_WIDTH);
-        var column = Math.floor(testX/pacmanConfig.TILE_WIDTH);
+        var row = Math.floor(testY/config.TILE_WIDTH);
+        var column = Math.floor(testX/config.TILE_WIDTH);
         testXYMessage= "location: " + testX + " " + testY + " Row/Col " +
-            Math.floor(testY/pacmanConfig.TILE_WIDTH) + " " + Math.floor(testX/pacmanConfig.TILE_WIDTH) +
+            Math.floor(testY/config.TILE_WIDTH) + " " + Math.floor(testX/config.TILE_WIDTH) +
             " " + maze.getValueAt(row, column);
 
 
@@ -78,13 +79,11 @@ function Pacman(scene, maze){
 
         animationTimer = animationTimer + 1;
 
-
-
-        if(animationTimer <= 3){
-            this.setImage(pacmanConfig.PACMAN_FILE_2);
+        if(animationTimer === 1){
+            this.setImage(config.PACMAN_FILE_2);
         }
-        else if(animationTimer <= 5){
-            this.setImage(pacmanConfig.PACMAN_FILE_1);
+        else if(animationTimer === 3){
+            this.setImage(config.PACMAN_FILE_1);
         }
 
         if(animationTimer >= 5){
@@ -102,7 +101,7 @@ function Pacman(scene, maze){
 
         var newDirection = getKeyDirection(this.getMoveAngle());
         this.setAngle(newDirection);
-        this.setSpeed(pacmanConfig.PACMAN_REGULAR_SPEED);
+        this.setSpeed(config.PACMAN_REGULAR_SPEED);
         var wasMovingHorizontal = movingHorizontal();
         var wasMovingVertical = movingVertical();
 
@@ -113,7 +112,7 @@ function Pacman(scene, maze){
             this.setAngle(previousDirection);
         }
         else{
-            this.setSpeed(pacmanConfig.PACMAN_REGULAR_SPEED);
+            this.setSpeed(config.PACMAN_REGULAR_SPEED);
         }
 
 
@@ -121,14 +120,14 @@ function Pacman(scene, maze){
         //hinge the sprite to the center of the traveling lane
         if(movingHorizontal()){
 
-            alignmentOnY = Math.floor(this.y/pacmanConfig.TILE_HEIGHT)*pacmanConfig.TILE_HEIGHT+16;
+            alignmentOnY = Math.floor(this.y/config.TILE_HEIGHT)*config.TILE_HEIGHT+16;
             if(alignmentOnY !== this.y){
                 this.setPosition(this.x, alignmentOnY);
             }
         }
 
         if(movingVertical()){
-            alignmentOnX = Math.floor(this.x/pacmanConfig.TILE_HEIGHT)*pacmanConfig.TILE_HEIGHT+16;
+            alignmentOnX = Math.floor(this.x/config.TILE_HEIGHT)*config.TILE_HEIGHT+16;
             if(alignmentOnX !== this.x){
                 this.setPosition(alignmentOnX, this.y);
             }
@@ -138,10 +137,17 @@ function Pacman(scene, maze){
 
     };
 
+    sprite.updateChildren = function(){
+
+        _leftButton.update();
+    };
 
     sprite.init = function(){
-        this.setPosition(pacmanConfig.PACMAN_START_X, pacmanConfig.PACMAN_START_Y);
+        this.setPosition(config.PACMAN_START_X, config.PACMAN_START_Y);
         this.setSpeed(0);
+
+        _leftButton = new XButton(scene, config.LEFT_BUTTON_IMAGE, 600, 400, 32, 32);
+        _leftButton.init();
     };
 
     sprite.displayPosition = function(){
