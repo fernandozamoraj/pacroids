@@ -172,10 +172,11 @@ function Pacman(scene, maze, config){
            diffY = _joy.getDiffY();
            diffX = _joy.getDiffX();
 
-           logInfo = logInfo + " diffX/diffY " + diffX + " " + diffY;
+           logInfo = logInfo + " diffX/diffY " + diffX.toString() + " " + diffY.toString();
         }
         else{
             logInfo = "_joy is null";
+            logInfo = logInfo + " diffX/diffY " + diffX.toString() + " " + diffY.toString();
         }
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
