@@ -164,8 +164,24 @@ function Pacman(scene, maze, config){
         var fontSize = "25";
         var fontColor = "#ffffff";
         var textValue = "HIGH SCORE        101235        999";
+        var logInfo = "";
+        var diffX = 0;
+        var diffY = 0;
+        if(_joy){
+           logInfo = "_joy is not null";
+           diffY = _joy.getDiffY();
+           diffX = _joy.getDiffX();
+
+           logInfo = logInfo + " diffX/diffY " + diffX + " " + diffY;
+        }
+        else{
+            logInfo = "_joy is null";
+        }
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
+        this.writeText(fontFamily, fontSize, fontColor, logInfo, 26, 40);
+
+
         //this.writeText(fontFamily, fontSize, fontColor, testXYMessage, 20, 60);
     };
 
