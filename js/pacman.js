@@ -5,20 +5,29 @@ function Pacman(scene, maze, config){
     var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
     var animationTimer = 0;
     var _leftButton;
+    var _joy;
 
     function getKeyDirection(currentDirection){
         var direction = currentDirection;
 
-        if(keysDown[K_LEFT] || _leftButton.isDown()){
+        var xOffset = 0;
+        var yOffset = 0;
+
+        if(_joy){
+            xOffset = _joy.getDiffX();
+            yOffSet = _joy.getDiffY();
+        }
+
+        if(keysDown[K_LEFT] || xOffset < 0){
             direction = config.WEST;
         }
-        if(keysDown[K_RIGHT]){
+        if(keysDown[K_RIGHT] || xOffset > 0){
             direction = config.EAST;
         }
-        if(keysDown[K_UP]){
+        if(keysDown[K_UP] || yOffset > 0){
             direction = config.NORTH;
         }
-        if(keysDown[K_DOWN]){
+        if(keysDown[K_DOWN] || yOffset < 0){
             direction = config.SOUTH;
         }
 
@@ -148,6 +157,11 @@ function Pacman(scene, maze, config){
 
         _leftButton = new XButton(scene, config.LEFT_BUTTON_IMAGE, 600, 400, 32, 32);
         _leftButton.init();
+
+        if(scene.touchable){
+            _joy = new Joy();               
+        }
+
     };
 
     sprite.displayPosition = function(){
