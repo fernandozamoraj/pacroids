@@ -4,7 +4,6 @@
 function Pacman(scene, maze, config){
     var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
     var animationTimer = 0;
-    var _leftButton;
     var _joy;
 
     function getKeyDirection(currentDirection){
@@ -148,15 +147,11 @@ function Pacman(scene, maze, config){
 
     sprite.updateChildren = function(){
 
-        _leftButton.update();
     };
 
     sprite.init = function(){
         this.setPosition(config.PACMAN_START_X, config.PACMAN_START_Y);
         this.setSpeed(0);
-
-        _leftButton = new XButton(scene, config.LEFT_BUTTON_IMAGE, 600, 400, 32, 32);
-        _leftButton.init();
 
         if(scene.touchable){
             _joy = new Joy();               
