@@ -7,6 +7,9 @@ function Game(){
     var _pacmanConfig;
     var _maze;
     var _pacman;
+    var _pacmanPelletCollisionDetector;
+    var _scoreBoard;
+    var _soundManager;
     
 
     this.getScene = function(){
@@ -32,6 +35,9 @@ function Game(){
         _scene.setBG('#000000');
         _maze = new Maze(_scene, _pacmanConfig );
         _pacman = Pacman(_scene, _maze, _pacmanConfig);
+        _scoreBoard = new ScoreBoard(_pacmanConfig);
+        _soundManager = new SoundManager(_pacmanConfig);
+        _pacmanPelletCollisionDetector = new PacmanPelletCollisionDetector(_pacman, _maze, _scoreBoard, _soundManager);
         
 
     };
@@ -49,7 +55,8 @@ function Game(){
         _maze.update();
         _pacman.update();
         _pacman.updateChildren();
-        _pacman.displayPosition();
+        _pacman.displayPosition(_scoreBoard.getScore());
+        _pacmanPelletCollisionDetector.update();
 
     };
 }

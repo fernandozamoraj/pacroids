@@ -26,7 +26,6 @@ function Pacman(scene, maze, config){
         }
 
         return direction;
-
     }
 
     function movingHorizontal(){
@@ -86,7 +85,7 @@ function Pacman(scene, maze, config){
             this.setImage(config.PACMAN_FILE_2);
         }
         else if(animationTimer === 3){
-            this.setImage(config.PACMAN_FILE_1);
+            //this.setImage(config.PACMAN_FILE_1);
         }
 
         if(animationTimer >= 5){
@@ -154,11 +153,12 @@ function Pacman(scene, maze, config){
 
     };
 
-    sprite.displayPosition = function(){
+    //TODO: fix this later so that the score is outside
+    sprite.displayPosition = function(score){
         var fontFamily = "courier new";
         var fontSize = "25";
         var fontColor = "#ffffff";
-        var textValue = "HIGH SCORE        101235        999";
+        var textValue = "HIGH SCORE        " + score.toString() + "        " + score.toString();
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
 

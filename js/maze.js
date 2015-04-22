@@ -3,6 +3,10 @@
  */
 function Maze(scene, config){
 
+    var COLUMNS_PER_ROW = 19;
+    var NON_PELLET_TILE = 32;
+    var _pelletsConsumed = 0;
+    var _totalPellets = 0;
 
     var map = [
     [23,17,17,17,17,17,17,17,17,28,17,17,17,17,17,17,17,17,20], //1
@@ -31,21 +35,31 @@ function Maze(scene, config){
     var tiles = new Array();
     var powerPelletTimer = 0;
 
+    function setPowerPelletImage(tileIndex, powerPelletTimer){
+
+        var row = Math.floor(tileIndex/COLUMNS_PER_ROW);
+        var column = tileIndex%COLUMNS_PER_ROW;
+
+        //only if the power pellet is active
+        if(map[row][column] === 33){
+            if(powerPelletTimer <= 4){
+                tiles[tileIndex].setImage(config.POWER_PELLET_SMALL);
+            }
+            else if(powerPelletTimer <= 8){
+                tiles[tileIndex].setImage(config.POWER_PELLET_LARGE);
+            }
+        }
+
+    }
+
     function togglePowerPellets(){
         powerPelletTimer = powerPelletTimer + 1;
 
-        if(powerPelletTimer <= 4){
-            tiles[39].setImage(config.POWER_PELLET_SMALL);
-            tiles[55].setImage(config.POWER_PELLET_SMALL);
-            tiles[286].setImage(config.POWER_PELLET_SMALL);
-            tiles[302].setImage(config.POWER_PELLET_SMALL);
-        }
-        else if(powerPelletTimer <= 8){
-            tiles[39].setImage(config.POWER_PELLET_LARGE);
-            tiles[55].setImage(config.POWER_PELLET_LARGE);
-            tiles[286].setImage(config.POWER_PELLET_LARGE);
-            tiles[302].setImage(config.POWER_PELLET_LARGE);
-        }
+        setPowerPelletImage(39, powerPelletTimer);
+        setPowerPelletImage(55, powerPelletTimer);
+        setPowerPelletImage(286, powerPelletTimer);
+        setPowerPelletImage(302, powerPelletTimer);
+
     }
 
     this.init = function(){
@@ -64,6 +78,11 @@ function Maze(scene, config){
                 tempSprite.setPosition(columns*32+16, rows*32+16);
                 tempSprite.setSpeed(0);
                 tiles.push(tempSprite);
+
+                //need to know how many total pellets are in map
+                if(map[rows][columns] === 0 || map[rows][columns] === 33){
+                    _totalPellets = _totalPellets + 1;
+                }
 
             }
         }
@@ -102,6 +121,47 @@ function Maze(scene, config){
        return canMoveThere( row, column );
     };
 
+    this.isPellet = function(x, y){
+        var tile = this.getRowColumnVector(x, y);
+        var tileValue = this.getValueAt(tile.row, tile.column);
+
+        return tileValue === 0;
+    };
+
+    this.isPowerPellet = function(x, y){
+        var tile = this.getRowColumnVector(x, y);
+        var tileValue = this.getValueAt(tile.row, tile.column);
+
+        return tileValue === 33;
+    };
+
+    this.getRowColumnVector = function(x,y){
+        var row = Math.floor( y/config.TILE_WIDTH);
+        var column = Math.floor( x/config.TILE_WIDTH);
+
+        return { row: row, column: column};
+    };
+
+    this.eatPellet = function(x, y){
+        var tile = this.getRowColumnVector(x, y);
+        var tileValue = this.getValueAt(tile.row, tile.column);
+
+        var tileIndex = 0;
+
+        if(tileValue === 0 || tileValue == 33){
+            map[tile.row][tile.column] = NON_PELLET_TILE;
+
+            //row and column are zero based
+            tileIndex = (tile.row*COLUMNS_PER_ROW)+(tile.column);
+
+            tiles[tileIndex].setImage("./img/maze/Tile32.PNG");
+            _pelletsConsumed = _pelletsConsumed + 1;
+        }
+    };
+
+    this.pelletsRemain = function(){
+        return _pelletsConsumed < _totalPellets;
+    };
 
     this.getValueAt = function(row, column){
         return map[row][column];
