@@ -12,27 +12,57 @@ function Pacman(scene, maze, config, joyStick){
         var xOffset = 0;
         var yOffset = 0;
 
-        var diffX = joyStick.getDiffX();
-        var diffY = joyStick.getDiffY();
-
         var THRESHOLD = 10;
 
-        if(keysDown[K_LEFT] === true || diffX < -(THRESHOLD)){
-            direction = config.WEST;
-            _directionMessage = "WEST";
+        if(joyStick){
+
+            var diffX = joyStick.getDiffX();
+            var diffY = joyStick.getDiffY();
+
+            //need to determine which was more powerful vertical or horizontal
+            var goVertical = (Math.abs(diffX)) < (Math.abs(diffY));
+
+            if(goVertical === true){
+                if(diffY <  -(THRESHOLD)){
+                    direction = config.NORTH;
+                    _directionMessage = "NORTH";
+                }
+                else if(diffY > THRESHOLD){
+                    direction = config.SOUTH;
+                    _directionMessage = "SOUTH";
+                }
+
+            }
+            else{
+                if(diffX < -(THRESHOLD)){
+                    direction = config.WEST;
+                    _directionMessage = "WEST";
+                }
+                else if(diffX > THRESHOLD){
+                    direction = config.EAST;
+                    _directionMessage = "EAST"
+                }
+            }
         }
-        else if(keysDown[K_RIGHT] === true || diffX > THRESHOLD){
-            direction = config.EAST;
-            _directionMessage = "EAST"
+        else{
+            if(keysDown[K_UP] === true){
+                direction = config.NORTH;
+                _directionMessage = "NORTH";
+            }
+            else if(keysDown[K_DOWN] === true){
+                direction = config.SOUTH;
+                _directionMessage = "SOUTH";
+            }
+            else  if(keysDown[K_LEFT] === true){
+                direction = config.WEST;
+                _directionMessage = "WEST";
+            }
+            else if(keysDown[K_RIGHT] === true){
+                direction = config.EAST;
+                _directionMessage = "EAST"
+            }
         }
-        else if(keysDown[K_UP] === true || diffY <  -(THRESHOLD)){
-            direction = config.NORTH;
-            _directionMessage = "NORTH";
-        }
-        else if(keysDown[K_DOWN] === true || diffY > THRESHOLD){
-            direction = config.SOUTH;
-            _directionMessage = "SOUTH";
-        }
+
 
         return direction;
     }

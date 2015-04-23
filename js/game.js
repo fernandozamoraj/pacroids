@@ -30,10 +30,17 @@ function Game(){
 
     this.init = function(){
         _pacmanConfig = new PacmanConfig();
-        _joyStick = new Joy();
+
+
+
         _scene = new Scene();
         _scene.setSize(_pacmanConfig.SCREEN_WIDTH, _pacmanConfig.SCREEN_HEIGHT);
         _scene.setBG('#000000');
+
+        if(_scene.touchable){
+            _joyStick = new Joy();
+        }
+
         _maze = new Maze(_scene, _pacmanConfig );
         _pacman = Pacman(_scene, _maze, _pacmanConfig, _joyStick);
         _scoreBoard = new ScoreBoard(_pacmanConfig);
