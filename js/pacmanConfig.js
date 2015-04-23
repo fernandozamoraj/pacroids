@@ -7,7 +7,7 @@ function PacmanConfig(){
     this.NORTH = 0;
     this.SOUTH = 180;
     this.PACMAN_REGULAR_SPEED = 6;
-    this.PACMAN_FAST_SPEED = 14;
+    this.PACMAN_FAST_SPEED = 11;
     this.SCREEN_WIDTH = 704;
     this.SCREEN_HEIGHT = 704;
     this.PACMAN_START_X = 304;
@@ -23,4 +23,5 @@ function PacmanConfig(){
     this.POINTS_FOR_PELLET = 1;
     this.POINTS_FOR_POWER_PELLET = 10;
     this.POINTS_FOR_GHOST = 200;
+    this.POWER_TIME = 10;
 }

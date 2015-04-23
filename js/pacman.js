@@ -5,6 +5,13 @@ function Pacman(scene, maze, config, joyStick){
     var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
     var animationTimer = 0;
     var _directionMessage = "";
+    var _powerTimer = new Timer();
+    _powerTimer.start();
+    var _boostedOnce = false;
+
+    function inPowerMode(){
+        return _boostedOnce && _powerTimer.getElapsedTime() < config.POWER_TIME;
+    }
 
     function getKeyedInDirection(currentDirection){
         var direction = currentDirection;
@@ -143,6 +150,7 @@ function Pacman(scene, maze, config, joyStick){
         var previousDirection;
         var alignmentOnX;
         var alignmentOnY;
+        var MOVINGSPEED = inPowerMode() ? config.PACMAN_FAST_SPEED : config.PACMAN_REGULAR_SPEED;
         switchPacmanImageForChompingAnimation.call(this);
 
         //Check for block prior to checking for keys to know if
@@ -156,7 +164,7 @@ function Pacman(scene, maze, config, joyStick){
 
         var newDirection = getKeyedInDirection(this.getMoveAngle());
         this.setAngle(newDirection);
-        this.setSpeed(config.PACMAN_REGULAR_SPEED);
+        this.setSpeed(MOVINGSPEED);
 
         //Check for blockage after changing direction
         if(this.isBlocked()){
@@ -178,6 +186,11 @@ function Pacman(scene, maze, config, joyStick){
 
     };
 
+    sprite.boostSpeed = function(){
+        _powerTimer.reset();
+        _boostedOnce = true;
+    };
+
     sprite.init = function(){
         this.setPosition(config.PACMAN_START_X, config.PACMAN_START_Y);
         this.setSpeed(0);
@@ -192,7 +205,7 @@ function Pacman(scene, maze, config, joyStick){
         var textValue = "HIGH SCORE        " + score.toString() + "        " + score.toString();
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
-        this.writeText(fontFamily, fontSize, fontColor, "DEBUGGIN DIRECTION " + _directionMessage, 26, 60);
+        //this.writeText(fontFamily, fontSize, fontColor, "DEBUGGIN DIRECTION " + _directionMessage, 26, 60);
 
         //this.writeText(fontFamily, fontSize, fontColor, testXYMessage, 20, 60);
     };

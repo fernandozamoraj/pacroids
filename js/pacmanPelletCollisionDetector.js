@@ -21,6 +21,7 @@ function PacmanPelletCollisionDetector(pacman, maze, scoreBoard, soundManager){
             maze.eatPellet(pacman.x, pacman.y);
             scoreBoard.updateScoreForPowerPellet();
             soundManager.playPelletAteSound();
+            pacman.boostSpeed();
         }
         else{
             console.log("is not power pellet");
