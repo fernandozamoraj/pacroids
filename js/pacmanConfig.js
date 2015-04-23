@@ -20,8 +20,8 @@ function PacmanConfig(){
     this.FONT_SIZE = "30";
     this.FONT_COLOR = "#FFFFFF";
     this.LEFT_BUTTON_IMAGE = "./img/maze/Tile33.PNG";
-    this.POINTS_FOR_PELLET = 1;
-    this.POINTS_FOR_POWER_PELLET = 10;
+    this.POINTS_FOR_PELLET = 10;
+    this.POINTS_FOR_POWER_PELLET = 50;
     this.POINTS_FOR_GHOST = 200;
     this.POWER_TIME = 10;
 }

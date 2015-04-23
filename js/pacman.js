@@ -4,7 +4,6 @@
 function Pacman(scene, maze, config, joyStick){
     var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
     var animationTimer = 0;
-    var _directionMessage = "";
     var _powerTimer = new Timer();
     _powerTimer.start();
     var _boostedOnce = false;
@@ -13,65 +12,65 @@ function Pacman(scene, maze, config, joyStick){
         return _boostedOnce && _powerTimer.getElapsedTime() < config.POWER_TIME;
     }
 
+    function getDirectionFromSwipeInput(direction) {
+        var THRESHOLD = 10;
+        var diffX = joyStick.getDiffX();
+        var diffY = joyStick.getDiffY();
+
+        //need to determine which was more powerful vertical or horizontal
+        var goVertical = (Math.abs(diffX)) < (Math.abs(diffY));
+
+        if (goVertical === true) {
+            if (diffY < -(THRESHOLD)) {
+                direction = config.NORTH;
+            }
+            else if (diffY > THRESHOLD) {
+                direction = config.SOUTH;
+            }
+
+        }
+        else {
+            if (diffX < -(THRESHOLD)) {
+                direction = config.WEST;
+            }
+            else if (diffX > THRESHOLD) {
+                direction = config.EAST;
+            }
+        }
+        return direction;
+    }
+
+    function getDirectionFromKeyboardInput(direction) {
+        if (keysDown[K_UP] === true) {
+            direction = config.NORTH;
+         }
+        else if (keysDown[K_DOWN] === true) {
+            direction = config.SOUTH;
+        }
+        else if (keysDown[K_LEFT] === true) {
+            direction = config.WEST;
+        }
+        else if (keysDown[K_RIGHT] === true) {
+            direction = config.EAST;
+        }
+        return direction;
+    }
+
     function getKeyedInDirection(currentDirection){
         var direction = currentDirection;
 
-        var xOffset = 0;
-        var yOffset = 0;
-
-        var THRESHOLD = 10;
-
-        if(joyStick){
-
-            var diffX = joyStick.getDiffX();
-            var diffY = joyStick.getDiffY();
-
-            //need to determine which was more powerful vertical or horizontal
-            var goVertical = (Math.abs(diffX)) < (Math.abs(diffY));
-
-            if(goVertical === true){
-                if(diffY <  -(THRESHOLD)){
-                    direction = config.NORTH;
-                    _directionMessage = "NORTH";
-                }
-                else if(diffY > THRESHOLD){
-                    direction = config.SOUTH;
-                    _directionMessage = "SOUTH";
-                }
-
-            }
-            else{
-                if(diffX < -(THRESHOLD)){
-                    direction = config.WEST;
-                    _directionMessage = "WEST";
-                }
-                else if(diffX > THRESHOLD){
-                    direction = config.EAST;
-                    _directionMessage = "EAST"
-                }
-            }
+        if(isTouchScreen()){
+            direction = getDirectionFromSwipeInput(direction);
         }
         else{
-            if(keysDown[K_UP] === true){
-                direction = config.NORTH;
-                _directionMessage = "NORTH";
-            }
-            else if(keysDown[K_DOWN] === true){
-                direction = config.SOUTH;
-                _directionMessage = "SOUTH";
-            }
-            else  if(keysDown[K_LEFT] === true){
-                direction = config.WEST;
-                _directionMessage = "WEST";
-            }
-            else if(keysDown[K_RIGHT] === true){
-                direction = config.EAST;
-                _directionMessage = "EAST"
-            }
+            direction = getDirectionFromKeyboardInput(direction);
         }
 
-
         return direction;
+    }
+
+    function isTouchScreen(){
+        return joyStick;
     }
 
     function movingHorizontal(){
@@ -205,9 +204,6 @@ function Pacman(scene, maze, config, joyStick){
         var textValue = "HIGH SCORE        " + score.toString() + "        " + score.toString();
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
-        //this.writeText(fontFamily, fontSize, fontColor, "DEBUGGIN DIRECTION " + _directionMessage, 26, 60);
-
-        //this.writeText(fontFamily, fontSize, fontColor, testXYMessage, 20, 60);
     };
 
     return sprite;
