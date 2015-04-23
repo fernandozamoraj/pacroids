@@ -25,11 +25,11 @@ function Pacman(scene, maze, config, joyStick){
             direction = config.EAST;
             _directionMessage = "EAST"
         }
-        else if(keysDown[K_UP] === true || diffY >  THRESHOLD){
+        else if(keysDown[K_UP] === true || diffY <  -(THRESHOLD)){
             direction = config.NORTH;
             _directionMessage = "NORTH";
         }
-        else if(keysDown[K_DOWN] === true || diffY < -(THRESHOLD)){
+        else if(keysDown[K_DOWN] === true || diffY > THRESHOLD){
             direction = config.SOUTH;
             _directionMessage = "SOUTH";
         }
