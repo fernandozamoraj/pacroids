@@ -1,12 +1,13 @@
 /**
  * Created by mac on 4/18/15.
  */
-function Pacman(scene, maze, config){
+function Pacman(scene, maze, config, joyStick){
     var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
     var animationTimer = 0;
     var _joy;
+    var _directionMessage = "";
 
-    function getKeyDirection(currentDirection){
+    function getKeyedInDirection(currentDirection){
         var direction = currentDirection;
 
         var xOffset = 0;
@@ -14,15 +15,19 @@ function Pacman(scene, maze, config){
 
         if(keysDown[K_LEFT] === true){
             direction = config.WEST;
+            _directionMessage = "WEST";
         }
         else if(keysDown[K_RIGHT] === true){
             direction = config.EAST;
+            _directionMessage = "EAST"
         }
         else if(keysDown[K_UP] === true){
             direction = config.NORTH;
+            _directionMessage = "NORTH";
         }
         else if(keysDown[K_DOWN] === true){
             direction = config.SOUTH;
+            _directionMessage = "SOUTH";
         }
 
         return direction;
@@ -36,7 +41,46 @@ function Pacman(scene, maze, config){
         return (sprite.getMoveAngle() === config.NORTH || sprite.getMoveAngle() === config.SOUTH);
     }
 
-    var testXYMessage = '';
+    //Centers pacman in the middle of the road
+    //without this function pacman can end up to far up or down
+    //while traveling east or west
+    function hingeToHorizontalTrack(alignmentOnY) {
+        //If direction changed from vertical to horizontal or vice versa
+        //hinge the sprite to the center of the traveling lane
+        if (movingHorizontal()) {
+
+            alignmentOnY = Math.floor(this.y / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
+            if (alignmentOnY !== this.y) {
+                this.setPosition(this.x, alignmentOnY);
+            }
+        }
+    }
+
+    function hingeToVerticalTrack(alignmentOnX) {
+        if (movingVertical()) {
+            alignmentOnX = Math.floor(this.x / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
+            if (alignmentOnX !== this.x) {
+                this.setPosition(alignmentOnX, this.y);
+            }
+        }
+    }
+
+    //TODO: use spritesheet instead of switching images
+    //switching images causes flicker
+    function switchPacmanImageForChompingAnimation() {
+        animationTimer = animationTimer + 1;
+
+        if (animationTimer === 1) {
+            this.setImage(config.PACMAN_FILE_2);
+        }
+        else if (animationTimer === 3) {
+            this.setImage(config.PACMAN_FILE_1);
+        }
+
+        if (animationTimer >= 5) {
+            animationTimer = 0;
+        }
+    }
 
     sprite.isBlocked = function(){
 
@@ -56,86 +100,43 @@ function Pacman(scene, maze, config){
             testY = this.y + (config.PACMAN_REGULAR_SPEED + 16);
         }
 
-        console.log("testX" + testX);
-        console.log("testY" + testY);
-
-        var fontFamily = "arial";
-        var fontSize = "30";
-        var fontColor = "#ff0000";
-        var row = Math.floor(testY/config.TILE_WIDTH);
-        var column = Math.floor(testX/config.TILE_WIDTH);
-        testXYMessage= "location: " + testX + " " + testY + " Row/Col " +
-            Math.floor(testY/config.TILE_WIDTH) + " " + Math.floor(testX/config.TILE_WIDTH) +
-            " " + maze.getValueAt(row, column);
-
-
         return maze.isValidMove(testX, testY) === false;
     };
 
-    sprite.checkKeys = function(){
+    sprite.checkKeysAndUpdatePosition = function(){
 
         var previousSpeed;
-        var previousDirection = this.getMoveAngle();
+        var previousDirection;
         var alignmentOnX;
         var alignmentOnY;
-
-        animationTimer = animationTimer + 1;
-
-        if(animationTimer === 1){
-            this.setImage(config.PACMAN_FILE_2);
-        }
-        else if(animationTimer === 3){
-            //this.setImage(config.PACMAN_FILE_1);
-        }
-
-        if(animationTimer >= 5){
-            animationTimer = 0;
-        }
+        switchPacmanImageForChompingAnimation.call(this);
 
         //Check for block prior to checking for keys to know if
         //this needs to stop
         if(this.isBlocked()){
-            console.log("IT's blocked");
             this.setSpeed(0);
         }
 
         previousSpeed = this.getSpeed();
+        previousDirection = this.getMoveAngle();
 
-        var newDirection = getKeyDirection(this.getMoveAngle());
+        var newDirection = getKeyedInDirection(this.getMoveAngle());
         this.setAngle(newDirection);
         this.setSpeed(config.PACMAN_REGULAR_SPEED);
-        var wasMovingHorizontal = movingHorizontal();
-        var wasMovingVertical = movingVertical();
 
-        //Check for blockage after changin direction
+        //Check for blockage after changing direction
         if(this.isBlocked()){
-            console.log("blocked after key prese");
+
+            //revert to previous speed and direction if blocked
             this.setSpeed(previousSpeed);
             this.setAngle(previousDirection);
         }
-        else{
-            this.setSpeed(config.PACMAN_REGULAR_SPEED);
-        }
 
-
-        //If direction changed from vertical to horizontal or vice versa
-        //hinge the sprite to the center of the traveling lane
-        if(movingHorizontal()){
-
-            alignmentOnY = Math.floor(this.y/config.TILE_HEIGHT)*config.TILE_HEIGHT+16;
-            if(alignmentOnY !== this.y){
-                this.setPosition(this.x, alignmentOnY);
-            }
-        }
-
-        if(movingVertical()){
-            alignmentOnX = Math.floor(this.x/config.TILE_HEIGHT)*config.TILE_HEIGHT+16;
-            if(alignmentOnX !== this.x){
-                this.setPosition(alignmentOnX, this.y);
-            }
-        }
-
-        //this.setSpeed(pacmanConfig.PACMAN_REGULAR_SPEED);
+        //hinging is necessary to remain on track
+        //otherwise there is a littlbe bit of play to move
+        //perpendicular to the direction of travel
+        hingeToHorizontalTrack.call(this, alignmentOnY);
+        hingeToVerticalTrack.call(this, alignmentOnX);
 
     };
 
@@ -161,7 +162,7 @@ function Pacman(scene, maze, config){
         var textValue = "HIGH SCORE        " + score.toString() + "        " + score.toString();
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
-
+        this.writeText(fontFamily, fontSize, fontColor, "DEBUGGIN DIRECTION " + _directionMessage, 26, 60);
 
         //this.writeText(fontFamily, fontSize, fontColor, testXYMessage, 20, 60);
     };
