@@ -4,7 +4,6 @@
 function Pacman(scene, maze, config, joyStick){
     var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
     var animationTimer = 0;
-    var _joy;
     var _directionMessage = "";
 
     function getKeyedInDirection(currentDirection){
@@ -13,19 +12,24 @@ function Pacman(scene, maze, config, joyStick){
         var xOffset = 0;
         var yOffset = 0;
 
-        if(keysDown[K_LEFT] === true){
+        var diffX = joyStick.getDiffX();
+        var diffY = joyStick.getDiffY();
+
+        var THRESHOLD = 10;
+
+        if(keysDown[K_LEFT] === true || diffX < -(THRESHOLD)){
             direction = config.WEST;
             _directionMessage = "WEST";
         }
-        else if(keysDown[K_RIGHT] === true){
+        else if(keysDown[K_RIGHT] === true || diffX > THRESHOLD){
             direction = config.EAST;
             _directionMessage = "EAST"
         }
-        else if(keysDown[K_UP] === true){
+        else if(keysDown[K_UP] === true || diffY >  THRESHOLD){
             direction = config.NORTH;
             _directionMessage = "NORTH";
         }
-        else if(keysDown[K_DOWN] === true){
+        else if(keysDown[K_DOWN] === true || diffY < -(THRESHOLD)){
             direction = config.SOUTH;
             _directionMessage = "SOUTH";
         }
@@ -147,10 +151,6 @@ function Pacman(scene, maze, config, joyStick){
     sprite.init = function(){
         this.setPosition(config.PACMAN_START_X, config.PACMAN_START_Y);
         this.setSpeed(0);
-
-        if(scene.touchable){
-            _joy = new Joy();               
-        }
 
     };
 

@@ -641,16 +641,6 @@ function Joy(){
     //define event handlers
     this.onTouchStart = function(event){
 
-
-        //bug in iOS will not play sound unless it is first played
-        //during a user event such as touch start.
-        if(turnOnSound){
-            turnOnSound.play();
-            setTimeout( function(){
-                turnOnSound.stop();
-            }, 500);
-        }
-
         result = "touch: ";
         touches = event.touches;
         startX = touches[0].screenX;

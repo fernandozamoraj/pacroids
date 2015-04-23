@@ -12,9 +12,6 @@ function Game(){
     var _soundManager;
     var _joyStick;
 
-    //Turn on virtual keys so that the virtual joystick automatically sets them
-    virtKeys = true;
-
     this.getScene = function(){
       return _scene;
     };
