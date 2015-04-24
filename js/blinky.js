@@ -16,16 +16,18 @@ function Blinky(scene, config, pacman, moveHelper){
 
     //move towards pacman
     //close the bigger distance
-    sprite.moveTowardsPacman =  function(){
-        var angles = [];
+    sprite.createPossibleMovesQueue =  function(){
+        var movesQueue = [];
 
         var horizontalDirection;
         var verticalDirection;
 
         var horizontalDistance = Math.abs(pacman.x - this.x);
         var verticalDistance = Math.abs(pacman.y - this.y);
+        var pacmanIsSouth = this.y < pacman.y;
+        var pacmanIsEastward = this.x < pacman.x;
 
-        if(this.y < pacman.y){
+        if(pacmanIsSouth){
             verticalDirection = config.SOUTH;
         }
         else
@@ -33,7 +35,7 @@ function Blinky(scene, config, pacman, moveHelper){
             verticalDirection = config.NORTH;
         }
 
-        if (this.x < pacman.x) {
+        if (pacmanIsEastward) {
             horizontalDirection = config.EAST;
         }
         else {
@@ -41,92 +43,112 @@ function Blinky(scene, config, pacman, moveHelper){
         }
 
         if(horizontalDistance < verticalDistance){
-            angles.push(verticalDirection);
-            angles.push(horizontalDirection);
+            movesQueue.push(verticalDirection);
+            movesQueue.push(horizontalDirection);
         }
         else{
-            angles.push(horizontalDirection);
-            angles.push(verticalDirection);
+            movesQueue.push(horizontalDirection);
+            movesQueue.push(verticalDirection);
         }
 
+        //Brute force approach here
+        //since I don't want to check what is already in the queuee
+        //I will just add them all in
+        movesQueue.push(config.SOUTH);
+        movesQueue.push(config.WEST);
+        movesQueue.push(config.NORTH);
+        movesQueue.push(config.EAST);
 
-        return angles;
+
+        return movesQueue;
     };
 
-    sprite.doAI = function(){
+    function attemptTheFIrstMoveInTheQueue(sprite, routes, originalAngle) {
 
-        //NO turning allowed unless n frames have passed to prevent bouncing around
-        //and jittering around
-        //Except is pacman is blocked
-        _aiTimer++;
-        if(_aiTimer < 10  && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED) === false){
-            return;
-        }
-
-        //Only allow ghost to do AI if it is within lined up wih the perpendicular route
-        if(moveHelper.isWithinTurningBounds(this) === false){
-            return;
-        }
-
-
-        var routes = [];
-        var i = 0;
-
-        var originalAngle = this.getMoveAngle();
-        routes = this.moveTowardsPacman();
-
-
-        routes.push(config.SOUTH);
-        routes.push(config.WEST);
-        routes.push(config.NORTH);
-        routes.push(config.EAST);
-
-        i = 0;
 
         //turn left or right from current direction
-        if(routes[i] !== oppositeAngle(originalAngle)) {
-            this.setMoveAngle(routes[0]);
+        if (routes[0] != oppositeAngle(originalAngle)) {
+            sprite.setMoveAngle(routes[0]);
         }
 
         //if blocked revert to original angle
-        if(moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED)){
-            this.setMoveAngle(originalAngle);
+        if (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
+            sprite.setMoveAngle(originalAngle);
         }
-        else{
+        else {
             _aiTimer = 0;
         }
+    }
 
-        //if still blocked try all the alternate routes except going in the
+    function cycleThroughAlternateMoves(sprite, routes, originalAngle) {
+
+        var i = 1;
+       //if still blocked try all the alternate routes except going in the
         //opposite direction i.e. don't bounce off walls
-        while(moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED)){
+        while (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
 
             console.log("block on " + routes[i].toString());
 
             //pinky must never go back where he came from...
             //i.e. don't bounce off walls
             //left of right from where he came from is OK
-            if(routes[i] !== oppositeAngle(originalAngle)){
-                this.setMoveAngle(routes[i]);
-                _aiTimer=0;
+            if (routes[i] != oppositeAngle(originalAngle)) {
+                sprite.setMoveAngle(routes[i]);
+                _aiTimer = 0;
             }
 
             i++;
-        };
+        }
 
+    }
+
+    sprite.doAI = function(){
+
+
+        if(this.aiIsALlowedAtThisMoment() === false)
+           return;
+
+        var originalAngle = this.getMoveAngle();
+        var movesQueue = this.createPossibleMovesQueue();
+
+        attemptTheFIrstMoveInTheQueue(this, movesQueue, originalAngle);
+        cycleThroughAlternateMoves(this, movesQueue, originalAngle);
+
+        console.log("Original Angle: " + originalAngle.toString());
+        console.log("New Angle: " + this.getMoveAngle());
         moveHelper.hingeToHorizontalTrack(this);
         moveHelper.hingeToVerticalTrack(this);
 
     };
 
+    sprite.aiIsALlowedAtThisMoment = function(){
+        //NO turning allowed unless n frames have passed to prevent bouncing around
+        //and jittering around
+        //Except is pacman is blocked
+        _aiTimer++;
+        if(_aiTimer < 10  && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED) === false){
+            return false;
+        }
+
+        //Only allow ghost to do AI if it is within lined up wih the perpendicular route
+        if(moveHelper.isWithinTurningBounds(this) === false){
+            return false;
+        }
+
+        return true;
+    };
+
     function oppositeAngle(angle){
-        if(angle === config.SOUTH){
+        var integerAngle = Math.floor(angle);
+
+        if(integerAngle=== config.SOUTH){
             return config.NORTH;
         }
-        else if(angle === config.NORTH)
+        else if(integerAngle === config.NORTH)
         {
             return config.NORTH;
         }
-        else if(angle === config.WEST){
+        else if(integerAngle === config.WEST){
             return config.EAST;
         }
         else {
