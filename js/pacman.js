@@ -84,21 +84,21 @@ function Pacman(scene, maze, config, joyStick){
     //Centers pacman in the middle of the road
     //without this function pacman can end up to far up or down
     //while traveling east or west
-    function hingeToHorizontalTrack(alignmentOnY) {
+    function hingeToHorizontalTrack() {
         //If direction changed from vertical to horizontal or vice versa
         //hinge the sprite to the center of the traveling lane
         if (movingHorizontal()) {
 
-            alignmentOnY = Math.floor(this.y / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
+            var alignmentOnY = Math.floor(this.y / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
             if (alignmentOnY !== this.y) {
                 this.setPosition(this.x, alignmentOnY);
             }
         }
     }
 
-    function hingeToVerticalTrack(alignmentOnX) {
+    function hingeToVerticalTrack() {
         if (movingVertical()) {
-            alignmentOnX = Math.floor(this.x / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
+            var alignmentOnX = Math.floor(this.x / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
             if (alignmentOnX !== this.x) {
                 this.setPosition(alignmentOnX, this.y);
             }
@@ -147,8 +147,6 @@ function Pacman(scene, maze, config, joyStick){
 
         var previousSpeed;
         var previousDirection;
-        var alignmentOnX;
-        var alignmentOnY;
         var MOVINGSPEED = inPowerMode() ? config.PACMAN_FAST_SPEED : config.PACMAN_REGULAR_SPEED;
         switchPacmanImageForChompingAnimation.call(this);
 
@@ -176,8 +174,8 @@ function Pacman(scene, maze, config, joyStick){
         //hinging is necessary to remain on track
         //otherwise there is a littlbe bit of play to move
         //perpendicular to the direction of travel
-        hingeToHorizontalTrack.call(this, alignmentOnY);
-        hingeToVerticalTrack.call(this, alignmentOnX);
+        hingeToHorizontalTrack.call(this);
+        hingeToVerticalTrack.call(this);
 
     };
 

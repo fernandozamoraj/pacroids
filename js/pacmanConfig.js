@@ -24,4 +24,5 @@ function PacmanConfig(){
     this.POINTS_FOR_POWER_PELLET = 50;
     this.POINTS_FOR_GHOST = 200;
     this.POWER_TIME = 10;
+    this.BLINKY_IMAGE_FILE = "./img/GHOSTA_RIGHT1.PNG"
 }
