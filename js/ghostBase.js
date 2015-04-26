@@ -107,9 +107,9 @@ function GhostBase(scene, config, pacman, moveHelper, imageFile, speed, aiTimer)
 
 
         //turn left or right from current direction
-        if (routes[0] != oppositeAngle(originalAngle)) {
+        //if (routes[0] != oppositeAngle(originalAngle)) {
             sprite.setMoveAngle(routes[0]);
-        }
+        //}
 
         //if blocked revert to original angle
         if (moveHelper.isBlocked(sprite, speed)) {
