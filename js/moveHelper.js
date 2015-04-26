@@ -35,7 +35,7 @@ function MoveHelper(maze, config){
         if (movingHorizontal(sprite)) {
 
             var alignmentOnY = Math.floor(sprite.y / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
-            if (alignmentOnY !== sprite.y) {
+            if (Math.abs(alignmentOnY - sprite.y) > 2) {
                 sprite.setPosition(sprite.x, alignmentOnY);
             }
         }
@@ -44,7 +44,7 @@ function MoveHelper(maze, config){
     this.hingeToVerticalTrack = function(sprite) {
         if (movingVertical(sprite)) {
             var alignmentOnX = Math.floor(sprite.x / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
-            if (alignmentOnX !== sprite.x) {
+            if (Math.abs(alignmentOnX - sprite.x) > 2) {
                 sprite.setPosition(alignmentOnX, sprite.y);
             }
         }
@@ -52,16 +52,43 @@ function MoveHelper(maze, config){
 
     //use this so that ghosts don't turn too early creating a jerk effect
     this.isWithinTurningBounds = function(sprite){
-        var alignmentOnX = Math.floor(sprite.x / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
-        var alignmentOnY = Math.floor(sprite.y / config.TILE_HEIGHT) * config.TILE_HEIGHT + 16;
+        var alignmentOnX = Math.floor(sprite.x / config.TILE_HEIGHT) * config.TILE_HEIGHT+16;
+        var alignmentOnY = Math.floor(sprite.y / config.TILE_HEIGHT) * config.TILE_HEIGHT+16;
+        var result = false;
+        var travelingMsg = "unknown travel direction";
 
         var threshold = 1;
-        if(sprite.getMoveAngle() === config.SOUTH || sprite.getMoveAngle() && config.NORTH){
-            return Math.abs( sprite.x - alignmentOnX) < threshold;
+        console.log(sprite);
+        if(sprite.getMoveAngle() === config.SOUTH || sprite.getMoveAngle() === config.NORTH){
+            travelingMsg = "Traveling vertically";
+            result = Math.abs( sprite.x - alignmentOnX) <= threshold;
         }
 
-        if(sprite.getMoveAngle() === config.EAST || sprite.getMoveAngle() && config.WEST){
-            return Math.abs( sprite.y - alignmentOnY) < threshold;
+        if(sprite.getMoveAngle() === config.EAST || sprite.getMoveAngle() == config.WEST){
+            travelingMsg = "Traveling horizontally";
+            result = Math.abs( sprite.y - alignmentOnY) <= threshold;
+        }
+
+        console.log(travelingMsg);
+
+        return result;
+    };
+
+    this.oppositeAngle = function(angle){
+        var integerAngle = Math.floor(angle);
+
+        if(integerAngle=== config.SOUTH){
+            return config.NORTH;
+        }
+        else if(integerAngle === config.NORTH)
+        {
+            return config.SOUTH;
+        }
+        else if(integerAngle === config.WEST){
+            return config.EAST;
+        }
+        else {
+            return config.WEST;
         }
     };
 
@@ -72,7 +99,4 @@ function MoveHelper(maze, config){
     function movingVertical(sprite){
         return (sprite.getMoveAngle() === config.NORTH || sprite.getMoveAngle() === config.SOUTH);
     }
-
-
-
 }

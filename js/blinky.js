@@ -11,7 +11,9 @@ function Blinky(scene, config, pacman, moveHelper){
 
         this.setPosition(config.PACMAN_START_X + 64, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
         this.setMoveAngle(config.WEST);
-        this.setSpeed(config.PACMAN_REGULAR_SPEED);
+        this.setSpeed(config.BLINKY_SPEED);
+        moveHelper.hingeToHorizontalTrack(this);
+        moveHelper.hingeToVerticalTrack(this);
     };
 
     //move towards pacman
@@ -89,7 +91,7 @@ function Blinky(scene, config, pacman, moveHelper){
         //and jittering around
         //Except is pacman is blocked
         _aiTimer++;
-        if(_aiTimer < config.BLINKY_AI_TIMER  && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED) === false){
+        if(_aiTimer < config.BLINKY_AI_TIMER  && moveHelper.isBlocked(this, config.BLINKY_SPEED) === false){
             return false;
         }
 
@@ -123,7 +125,7 @@ function Blinky(scene, config, pacman, moveHelper){
         var i = 1;
        //if still blocked try all the alternate routes except going in the
         //opposite direction i.e. don't bounce off walls
-        while (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
+        while (moveHelper.isBlocked(sprite, config.BLINKY_SPEED)) {
 
             console.log("block on " + routes[i].toString());
 
@@ -140,22 +142,9 @@ function Blinky(scene, config, pacman, moveHelper){
 
     }
 
-    function oppositeAngle(angle){
-        var integerAngle = Math.floor(angle);
 
-        if(integerAngle=== config.SOUTH){
-            return config.NORTH;
-        }
-        else if(integerAngle === config.NORTH)
-        {
-            return config.NORTH;
-        }
-        else if(integerAngle === config.WEST){
-            return config.EAST;
-        }
-        else {
-            return config.WEST;
-        }
+    function oppositeAngle(angle){
+        return moveHelper.oppositeAngle(angle);
     }
 
     return sprite;

@@ -9,9 +9,9 @@ function Pinky(scene, config, pacman, moveHelper){
 
     sprite.init = function(){
 
-        this.setPosition(config.PACMAN_START_X + 64, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
+        this.setPosition(config.PACMAN_START_X + 32, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
         this.setMoveAngle(config.WEST);
-        this.setSpeed(config.PACMAN_REGULAR_SPEED);
+        this.setSpeed(config.PINKY_SPEED);
     };
 
     //move towards pacman
@@ -90,7 +90,7 @@ function Pinky(scene, config, pacman, moveHelper){
         //Except is pacman is blocked
         _aiTimer++;
 
-        if(_aiTimer < config.PINKY_AI_TIMER && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED) === false){
+        if(_aiTimer < config.PINKY_AI_TIMER && moveHelper.isBlocked(this, config.PINKY_SPEED) === false){
             return false;
         }
 
@@ -111,7 +111,7 @@ function Pinky(scene, config, pacman, moveHelper){
         }
 
         //if blocked revert to original angle
-        if (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
+        if (moveHelper.isBlocked(sprite, config.PINKY_SPEED)) {
             sprite.setMoveAngle(originalAngle);
         }
         else {
@@ -124,7 +124,7 @@ function Pinky(scene, config, pacman, moveHelper){
         var i = 1;
         //if still blocked try all the alternate routes except going in the
         //opposite direction i.e. don't bounce off walls
-        while (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
+        while (moveHelper.isBlocked(sprite, config.PINKY_SPEED)) {
 
             console.log("block on " + routes[i].toString());
 
@@ -142,21 +142,7 @@ function Pinky(scene, config, pacman, moveHelper){
     }
 
     function oppositeAngle(angle){
-        var integerAngle = Math.floor(angle);
-
-        if(integerAngle=== config.SOUTH){
-            return config.NORTH;
-        }
-        else if(integerAngle === config.NORTH)
-        {
-            return config.NORTH;
-        }
-        else if(integerAngle === config.WEST){
-            return config.EAST;
-        }
-        else {
-            return config.WEST;
-        }
+        return moveHelper.oppositeAngle(angle);
     }
 
     return sprite;

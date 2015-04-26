@@ -12,9 +12,9 @@ function Clyde(scene, config, pacman, moveHelper){
 
     sprite.init = function(){
 
-        this.setPosition(config.PACMAN_START_X + 32, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
+        this.setPosition(config.PACMAN_START_X, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
         this.setMoveAngle(config.WEST);
-        this.setSpeed(config.PACMAN_REGULAR_SPEED-1);
+        this.setSpeed(config.CLYDE_SPEED);
     };
 
     //move towards pacman
@@ -45,7 +45,7 @@ function Clyde(scene, config, pacman, moveHelper){
             horizontalDirection = config.WEST;
         }
 
-        if(horizontalDistance > verticalDistance && horizontalDistance > 16){
+        if(this.distanceTo(pacman) > 300 &&  horizontalDistance > verticalDistance){
             movesQueue.push(verticalDirection);
             movesQueue.push(horizontalDirection);
         }
@@ -92,11 +92,11 @@ function Clyde(scene, config, pacman, moveHelper){
         _aiTimer++;
         var minTime = config.CLYDE_AI_TIMER;
 
-        if(this.distanceTo(pacman) < 400){
+        if(this.distanceTo(pacman) < 200){
             minTime = config.PINKY_AI_TIMER;
         }
 
-        if(_aiTimer < minTime && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED-1) === false){
+        if(_aiTimer < minTime && moveHelper.isBlocked(this, config.CLYDE_SPEED) === false){
             return false;
         }
 
@@ -117,7 +117,7 @@ function Clyde(scene, config, pacman, moveHelper){
         }
 
         //if blocked revert to original angle
-        if (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED-1)) {
+        if (moveHelper.isBlocked(sprite, config.CLYDE_SPEED)) {
             sprite.setMoveAngle(originalAngle);
         }
         else {
@@ -130,7 +130,7 @@ function Clyde(scene, config, pacman, moveHelper){
         var i = 1;
         //if still blocked try all the alternate routes except going in the
         //opposite direction i.e. don't bounce off walls
-        while (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED-1)) {
+        while (moveHelper.isBlocked(sprite, config.CLYDE_SPEED)) {
 
             console.log("block on " + routes[i].toString());
 
@@ -148,21 +148,7 @@ function Clyde(scene, config, pacman, moveHelper){
     }
 
     function oppositeAngle(angle){
-        var integerAngle = Math.floor(angle);
-
-        if(integerAngle=== config.SOUTH){
-            return config.NORTH;
-        }
-        else if(integerAngle === config.NORTH)
-        {
-            return config.NORTH;
-        }
-        else if(integerAngle === config.WEST){
-            return config.EAST;
-        }
-        else {
-            return config.WEST;
-        }
+        return moveHelper.oppositeAngle(angle);
     }
 
     return sprite;
