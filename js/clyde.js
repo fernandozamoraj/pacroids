@@ -1,17 +1,20 @@
 /**
+ * Created by mac on 4/25/15.
+ */
+/**
  * Created by mac on 4/23/15.
  */
-function Blinky(scene, config, pacman, moveHelper){
+function Clyde(scene, config, pacman, moveHelper){
 
-    var sprite = new EnhancedSprite(scene, config.BLINKY_IMAGE_FILE, 32, 32);
+    var sprite = new EnhancedSprite(scene, config.CLYDE_IMAGE_FILE, 32, 32);
 
     var _aiTimer = 0;
 
     sprite.init = function(){
 
-        this.setPosition(config.PACMAN_START_X + 64, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
+        this.setPosition(config.PACMAN_START_X + 32, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
         this.setMoveAngle(config.WEST);
-        this.setSpeed(config.PACMAN_REGULAR_SPEED);
+        this.setSpeed(config.PACMAN_REGULAR_SPEED-1);
     };
 
     //move towards pacman
@@ -42,7 +45,7 @@ function Blinky(scene, config, pacman, moveHelper){
             horizontalDirection = config.WEST;
         }
 
-        if(horizontalDistance < verticalDistance){
+        if(horizontalDistance > verticalDistance && horizontalDistance > 16){
             movesQueue.push(verticalDirection);
             movesQueue.push(horizontalDirection);
         }
@@ -69,8 +72,6 @@ function Blinky(scene, config, pacman, moveHelper){
         if(this.aiIsALlowedAtThisMoment() === false)
             return;
 
-
-
         var originalAngle = this.getMoveAngle();
         var movesQueue = this.createPossibleMovesQueue();
 
@@ -89,7 +90,13 @@ function Blinky(scene, config, pacman, moveHelper){
         //and jittering around
         //Except is pacman is blocked
         _aiTimer++;
-        if(_aiTimer < config.BLINKY_AI_TIMER  && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED) === false){
+        var minTime = config.CLYDE_AI_TIMER;
+
+        if(this.distanceTo(pacman) < 400){
+            minTime = config.PINKY_AI_TIMER;
+        }
+
+        if(_aiTimer < minTime && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED-1) === false){
             return false;
         }
 
@@ -110,7 +117,7 @@ function Blinky(scene, config, pacman, moveHelper){
         }
 
         //if blocked revert to original angle
-        if (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
+        if (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED-1)) {
             sprite.setMoveAngle(originalAngle);
         }
         else {
@@ -121,9 +128,9 @@ function Blinky(scene, config, pacman, moveHelper){
     function cycleThroughAlternateMoves(sprite, routes, originalAngle) {
 
         var i = 1;
-       //if still blocked try all the alternate routes except going in the
+        //if still blocked try all the alternate routes except going in the
         //opposite direction i.e. don't bounce off walls
-        while (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
+        while (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED-1)) {
 
             console.log("block on " + routes[i].toString());
 

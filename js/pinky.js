@@ -1,9 +1,9 @@
 /**
  * Created by mac on 4/23/15.
  */
-function Blinky(scene, config, pacman, moveHelper){
+function Pinky(scene, config, pacman, moveHelper){
 
-    var sprite = new EnhancedSprite(scene, config.BLINKY_IMAGE_FILE, 32, 32);
+    var sprite = new EnhancedSprite(scene, config.PINKY_IMAGE_FILE, 32, 32);
 
     var _aiTimer = 0;
 
@@ -89,7 +89,8 @@ function Blinky(scene, config, pacman, moveHelper){
         //and jittering around
         //Except is pacman is blocked
         _aiTimer++;
-        if(_aiTimer < config.BLINKY_AI_TIMER  && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED) === false){
+
+        if(_aiTimer < config.PINKY_AI_TIMER && moveHelper.isBlocked(this, config.PACMAN_REGULAR_SPEED) === false){
             return false;
         }
 
@@ -121,7 +122,7 @@ function Blinky(scene, config, pacman, moveHelper){
     function cycleThroughAlternateMoves(sprite, routes, originalAngle) {
 
         var i = 1;
-       //if still blocked try all the alternate routes except going in the
+        //if still blocked try all the alternate routes except going in the
         //opposite direction i.e. don't bounce off walls
         while (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
 
