@@ -12,7 +12,6 @@ function Inky(scene, config, pacman, moveHelper){
     var sprite = new GhostBase(scene, config, pacman, moveHelper, config.INKY_IMAGE_FILE, config.INKY_SPEED, config.INKY_AI_TIMER);
 
     sprite.init = function(){
-
         this.setPosition(config.PACMAN_START_X, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
         this.setMoveAngle(config.WEST);
         this.setSpeed(config.INKY_SPEED);
@@ -62,7 +61,6 @@ function Inky(scene, config, pacman, moveHelper){
         movesQueue.push(config.WEST);
         movesQueue.push(config.NORTH);
         movesQueue.push(config.EAST);
-
 
         return movesQueue;
     };

@@ -6,13 +6,7 @@
  */
 function Clyde(scene, config, pacman, moveHelper){
 
-    var sprite = new EnhancedSprite(scene, config.CLYDE_IMAGE_FILE, 32, 32);
-
-    var _aiTimer = 0;
-
-    sprite.log = function(message){
-          //console.log(message);
-    };
+    var sprite = new GhostBase(scene, config, pacman, moveHelper, config.CLYDE_IMAGE_FILE, config.CLYDE_SPEED, config.CLYDE_AI_TIMER);
 
     sprite.init = function(){
 
@@ -69,91 +63,6 @@ function Clyde(scene, config, pacman, moveHelper){
 
         return movesQueue;
     };
-
-    sprite.doAI = function(){
-
-
-        if(this.aiIsALlowedAtThisMoment() === false)
-            return;
-
-        var originalAngle = this.getMoveAngle();
-        var movesQueue = this.createPossibleMovesQueue();
-
-        attemptTheFIrstMoveInTheQueue(this, movesQueue, originalAngle);
-        cycleThroughAlternateMoves(this, movesQueue, originalAngle);
-
-        this.log("Original Angle: " + originalAngle.toString());
-        this.log("New Angle: " + this.getMoveAngle());
-        moveHelper.hingeToHorizontalTrack(this);
-        moveHelper.hingeToVerticalTrack(this);
-
-    };
-
-    sprite.aiIsALlowedAtThisMoment = function(){
-        //NO turning allowed unless n frames have passed to prevent bouncing around
-        //and jittering around
-        //Except is pacman is blocked
-        _aiTimer++;
-        var minTime = config.CLYDE_AI_TIMER;
-
-        if(this.distanceTo(pacman) < 200){
-            minTime = config.PINKY_AI_TIMER;
-        }
-
-        if(_aiTimer < minTime && moveHelper.isBlocked(this, config.CLYDE_SPEED) === false){
-            return false;
-        }
-
-        //Only allow ghost to do AI if it is within lined up wih the perpendicular route
-        if(moveHelper.isWithinTurningBounds(this) === false){
-            return false;
-        }
-
-        return true;
-    };
-
-    function attemptTheFIrstMoveInTheQueue(sprite, routes, originalAngle) {
-
-
-        //turn left or right from current direction
-        if (routes[0] != oppositeAngle(originalAngle)) {
-            sprite.setMoveAngle(routes[0]);
-        }
-
-        //if blocked revert to original angle
-        if (moveHelper.isBlocked(sprite, config.CLYDE_SPEED)) {
-            sprite.setMoveAngle(originalAngle);
-        }
-        else {
-            _aiTimer = 0;
-        }
-    }
-
-    function cycleThroughAlternateMoves(sprite, routes, originalAngle) {
-
-        var i = 1;
-        //if still blocked try all the alternate routes except going in the
-        //opposite direction i.e. don't bounce off walls
-        while (moveHelper.isBlocked(sprite, config.CLYDE_SPEED)) {
-
-            sprite.log("block on " + routes[i].toString());
-
-            //pinky must never go back where he came from...
-            //i.e. don't bounce off walls
-            //left of right from where he came from is OK
-            if (routes[i] != oppositeAngle(originalAngle)) {
-                sprite.setMoveAngle(routes[i]);
-                _aiTimer = 0;
-            }
-
-            i++;
-        }
-
-    }
-
-    function oppositeAngle(angle){
-        return moveHelper.oppositeAngle(angle);
-    }
 
     return sprite;
 
