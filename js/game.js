@@ -14,6 +14,7 @@ function Game(){
     var _blinky;
     var _pinky;
     var _clyde;
+    var _inky;
     var _moveHelper;
 
     this.log = function(messsage){
@@ -55,6 +56,7 @@ function Game(){
         _blinky = new Blinky(_scene, _pacmanConfig, _pacman, _moveHelper);
         _pinky = new Pinky(_scene, _pacmanConfig, _pacman, _moveHelper);
         _clyde = new Clyde(_scene, _pacmanConfig, _pacman, _moveHelper);
+        _inky = new Inky(_scene, _pacmanConfig, _pacman, _moveHelper);
 
         _scoreBoard = new ScoreBoard(_pacmanConfig);
         _soundManager = new SoundManager(_pacmanConfig);
@@ -71,6 +73,7 @@ function Game(){
         _blinky.init();
         _pinky.init();
         _clyde.init();
+        _inky.init();
     };
 
     this.update = function(){
@@ -80,16 +83,18 @@ function Game(){
         _blinky.doAI();
         _pinky.doAI();
         _clyde.doAI();
+        _inky.doAI();
 
         _maze.update();
         _pacman.update();
         _blinky.update();
         _pinky.update();
         _clyde.update();
+        _inky.update();
 
         _pacman.updateChildren();
         _pacman.displayPosition(_scoreBoard.getScore());
-        _blinky.displayPosition();
+
         _pacmanPelletCollisionDetector.update();
 
     };

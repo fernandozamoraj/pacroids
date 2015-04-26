@@ -29,8 +29,9 @@ function PacmanConfig(){
     this.PINKY_IMAGE_FILE = "./img/pinky.png";
     this.INKY_IMAGE_FILE = "./img/inky.png";
     this.CLYDE_IMAGE_FILE = "./img/clyde.png";
-    this.PINKY_AI_TIMER = 40;
-    this.BLINKY_AI_TIMER = 10;
+    this.PINKY_AI_TIMER = 10;
+    this.BLINKY_AI_TIMER = 20;
+    this.INKY_AI_TIMER = 60;
     this.PINKY_SPEED = 4;
     this.BLINKY_SPEED = 4;
     this.CLYDE_SPEED = 4;
