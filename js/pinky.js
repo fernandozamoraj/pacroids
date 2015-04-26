@@ -3,13 +3,8 @@
  */
 function Pinky(scene, config, pacman, moveHelper){
 
-    var sprite = new EnhancedSprite(scene, config.PINKY_IMAGE_FILE, 32, 32);
+    var sprite = GhostBase(scene, config, pacman, moveHelper, config.PINKY_IMAGE_FILE, config.PINKY_SPEED, config.PINKY_AI_TIMER);
 
-    var _aiTimer = 0;
-
-    sprite.log = function(message){
-        //console.log(message);
-    };
 
     sprite.init = function(){
 
@@ -66,89 +61,6 @@ function Pinky(scene, config, pacman, moveHelper){
 
         return movesQueue;
     };
-
-    sprite.doAI = function(){
-
-
-        if(this.aiIsALlowedAtThisMoment() === false)
-            return;
-
-
-
-        var originalAngle = this.getMoveAngle();
-        var movesQueue = this.createPossibleMovesQueue();
-
-        attemptTheFIrstMoveInTheQueue(this, movesQueue, originalAngle);
-        cycleThroughAlternateMoves(this, movesQueue, originalAngle);
-
-        this.log("Original Angle: " + originalAngle.toString());
-        this.log("New Angle: " + this.getMoveAngle());
-        moveHelper.hingeToHorizontalTrack(this);
-        moveHelper.hingeToVerticalTrack(this);
-
-    };
-
-    sprite.aiIsALlowedAtThisMoment = function(){
-        //NO turning allowed unless n frames have passed to prevent bouncing around
-        //and jittering around
-        //Except is pacman is blocked
-        _aiTimer++;
-
-        if(_aiTimer < config.PINKY_AI_TIMER && moveHelper.isBlocked(this, config.PINKY_SPEED) === false){
-            return false;
-        }
-
-        //Only allow ghost to do AI if it is within lined up wih the perpendicular route
-        if(moveHelper.isWithinTurningBounds(this) === false){
-            return false;
-        }
-
-        return true;
-    };
-
-    function attemptTheFIrstMoveInTheQueue(sprite, routes, originalAngle) {
-
-
-        //turn left or right from current direction
-        if (routes[0] != oppositeAngle(originalAngle)) {
-            sprite.setMoveAngle(routes[0]);
-        }
-
-        //if blocked revert to original angle
-        if (moveHelper.isBlocked(sprite, config.PINKY_SPEED)) {
-            sprite.setMoveAngle(originalAngle);
-        }
-        else {
-            _aiTimer = 0;
-        }
-    }
-
-    function cycleThroughAlternateMoves(sprite, routes, originalAngle) {
-
-        var i = 1;
-        //if still blocked try all the alternate routes except going in the
-        //opposite direction i.e. don't bounce off walls
-        while (moveHelper.isBlocked(sprite, config.PINKY_SPEED)) {
-
-            sprite.log("block on " + routes[i].toString());
-
-            //pinky must never go back where he came from...
-            //i.e. don't bounce off walls
-            //left of right from where he came from is OK
-            if (routes[i] != oppositeAngle(originalAngle)) {
-                sprite.setMoveAngle(routes[i]);
-                _aiTimer = 0;
-            }
-
-            i++;
-        }
-
-    }
-
-
-    function oppositeAngle(angle){
-        return moveHelper.oppositeAngle(angle);
-    }
 
     return sprite;
 
