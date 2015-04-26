@@ -128,16 +128,16 @@ function Pacman(scene, maze, config, joyStick){
         var testY = this.y;
 
         if(this.getMoveAngle() === config.WEST){
-            testX = this.x - (config.PACMAN_REGULAR_SPEED + 16);
+            testX = this.x - (this.currentSpeed + 16);
         }
         if(this.getMoveAngle() === config.EAST){
-            testX = this.x + (config.PACMAN_REGULAR_SPEED + 16);
+            testX = this.x + (this.currentSpeed + 16);
         }
         if(this.getMoveAngle() === config.NORTH){
-            testY = this.y - (config.PACMAN_REGULAR_SPEED + 16);
+            testY = this.y - (this.currentSpeed + 16);
         }
         if(this.getMoveAngle() === config.SOUTH){
-            testY = this.y + (config.PACMAN_REGULAR_SPEED + 16);
+            testY = this.y + (this.currentSpeed + 16);
         }
 
         return maze.isValidMove(testX, testY) === false;
@@ -147,7 +147,7 @@ function Pacman(scene, maze, config, joyStick){
 
         var previousSpeed;
         var previousDirection;
-        var MOVINGSPEED = inPowerMode() ? config.PACMAN_FAST_SPEED : config.PACMAN_REGULAR_SPEED;
+        this.currentSpeed = inPowerMode() ? config.PACMAN_FAST_SPEED : config.PACMAN_REGULAR_SPEED;
         switchPacmanImageForChompingAnimation.call(this);
 
         //Check for block prior to checking for keys to know if
@@ -161,7 +161,7 @@ function Pacman(scene, maze, config, joyStick){
 
         var newDirection = getKeyedInDirection(this.getMoveAngle());
         this.setAngle(newDirection);
-        this.setSpeed(MOVINGSPEED);
+        this.setSpeed(this.currentSpeed);
 
         //Check for blockage after changing direction
         if(this.isBlocked()){
