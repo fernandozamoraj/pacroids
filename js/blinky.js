@@ -3,13 +3,8 @@
  */
 function Blinky(scene, config, pacman, moveHelper){
 
-    var sprite = new EnhancedSprite(scene, config.BLINKY_IMAGE_FILE, 32, 32);
+    var sprite = GhostBase(scene, config, pacman, moveHelper, config.BLINKY_IMAGE_FILE, config.BLINKY_SPEED, config.BLINKY_AI_TIMER);
 
-    var _aiTimer = 0;
-
-    sprite.log = function(message){
-        //console.log(message);
-    };
 
     sprite.init = function(){
 
@@ -69,120 +64,5 @@ function Blinky(scene, config, pacman, moveHelper){
         return movesQueue;
     };
 
-    sprite.doAI = function(){
-
-
-        if(this.aiIsALlowedAtThisMoment() === false)
-            return;
-
-
-
-        var originalAngle = this.getMoveAngle();
-        var movesQueue = this.createPossibleMovesQueue();
-
-        attemptTheFIrstMoveInTheQueue(this, movesQueue, originalAngle);
-        cycleThroughAlternateMoves(this, movesQueue, originalAngle);
-
-        this.log("Original Angle: " + originalAngle.toString());
-        this.log("New Angle: " + this.getMoveAngle());
-        moveHelper.hingeToHorizontalTrack(this);
-        moveHelper.hingeToVerticalTrack(this);
-
-    };
-
-    sprite.aiIsALlowedAtThisMoment = function(){
-        //NO turning allowed unless n frames have passed to prevent bouncing around
-        //and jittering around
-        //Except is pacman is blocked
-        _aiTimer++;
-        if(_aiTimer < config.BLINKY_AI_TIMER  && moveHelper.isBlocked(this, config.BLINKY_SPEED) === false){
-            return false;
-        }
-
-        //Only allow ghost to do AI if it is within lined up wih the perpendicular route
-        if(moveHelper.isWithinTurningBounds(this) === false){
-            return false;
-        }
-
-        return true;
-    };
-
-    var prev = {x: 0, y: 0};
-
-    //TODO: fix this later so that the score is outside
-    sprite.displayPosition = function(score){
-        var fontFamily = "courier new";
-        var fontSize = "25";
-        var fontColor = "#ffffff";
-        var textValue = "pos " + this.x.toString() + ", " + this.y.toString();
-
-        if(prev.x === 0 || prev.y === 0){
-            prev.x = this.x;
-            prev.y = this.y;
-        }
-
-        if(Math.abs(prev.x-this.x) > 0 && Math.abs(prev.y-this.y) > 0){
-
-        }
-        else{
-            prev.x = this.x;
-            prev.y = this.y;
-        }
-
-        //for debugging purposes
-        //i used this to help me find out why the turns were choppy
-        //it turns out the logic in the movehelper was wrong
-        textValue = "prev " + prev.x.toString() + ", " + prev.y.toString();
-        //this.writeText(fontFamily, fontSize, fontColor, textValue, this.x, this.y+32);
-
-        textValue = "curr " + this.x.toString() + ", " + this.y.toString();
-        //this.writeText(fontFamily, fontSize, fontColor, textValue, this.x, this.y+52);
-    };
-
-    function attemptTheFIrstMoveInTheQueue(sprite, routes, originalAngle) {
-
-
-        //turn left or right from current direction
-        if (routes[0] != oppositeAngle(originalAngle)) {
-            sprite.setMoveAngle(routes[0]);
-        }
-
-        //if blocked revert to original angle
-        if (moveHelper.isBlocked(sprite, config.PACMAN_REGULAR_SPEED)) {
-            sprite.setMoveAngle(originalAngle);
-        }
-        else {
-            _aiTimer = 0;
-        }
-    }
-
-    function cycleThroughAlternateMoves(sprite, routes, originalAngle) {
-
-        var i = 1;
-       //if still blocked try all the alternate routes except going in the
-        //opposite direction i.e. don't bounce off walls
-        while (moveHelper.isBlocked(sprite, config.BLINKY_SPEED)) {
-
-            sprite.log("block on " + routes[i].toString());
-
-            //pinky must never go back where he came from...
-            //i.e. don't bounce off walls
-            //left of right from where he came from is OK
-            if (routes[i] != oppositeAngle(originalAngle)) {
-                sprite.setMoveAngle(routes[i]);
-                _aiTimer = 0;
-            }
-
-            i++;
-        }
-
-    }
-
-
-    function oppositeAngle(angle){
-        return moveHelper.oppositeAngle(angle);
-    }
-
     return sprite;
-
 }

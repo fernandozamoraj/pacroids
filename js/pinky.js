@@ -5,7 +5,6 @@ function Pinky(scene, config, pacman, moveHelper){
 
     var sprite = GhostBase(scene, config, pacman, moveHelper, config.PINKY_IMAGE_FILE, config.PINKY_SPEED, config.PINKY_AI_TIMER);
 
-
     sprite.init = function(){
 
         this.setPosition(config.PACMAN_START_X + 32, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));

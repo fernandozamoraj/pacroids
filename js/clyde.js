@@ -6,7 +6,7 @@
  */
 function Clyde(scene, config, pacman, moveHelper){
 
-    var sprite = new GhostBase(scene, config, pacman, moveHelper, config.CLYDE_IMAGE_FILE, config.CLYDE_SPEED, config.CLYDE_AI_TIMER);
+    var sprite = GhostBase(scene, config, pacman, moveHelper, config.CLYDE_IMAGE_FILE, config.CLYDE_SPEED, config.CLYDE_AI_TIMER);
 
     sprite.init = function(){
 
@@ -20,44 +20,23 @@ function Clyde(scene, config, pacman, moveHelper){
     sprite.createPossibleMovesQueue =  function(){
         var movesQueue = [];
 
-        var horizontalDirection;
-        var verticalDirection;
-
-        var horizontalDistance = Math.abs(pacman.x - this.x);
-        var verticalDistance = Math.abs(pacman.y - this.y);
         var pacmanIsSouth = this.y < pacman.y;
         var pacmanIsEastward = this.x < pacman.x;
 
         if(pacmanIsSouth){
-            verticalDirection = config.SOUTH;
-        }
-        else
-        {
-            verticalDirection = config.NORTH;
+            movesQueue.push(config.SOUTH);
         }
 
-        if (pacmanIsEastward) {
-            horizontalDirection = config.EAST;
-        }
-        else {
-            horizontalDirection = config.WEST;
-        }
-
-        if(this.distanceTo(pacman) > 300 &&  horizontalDistance > verticalDistance){
-            movesQueue.push(verticalDirection);
-            movesQueue.push(horizontalDirection);
-        }
-        else{
-            movesQueue.push(horizontalDirection);
-            movesQueue.push(verticalDirection);
+        if(pacmanIsEastward){
+            movesQueue.push(config.EAST);
         }
 
         //Brute force approach here
         //since I don't want to check what is already in the queuee
         //I will just add them all in
         movesQueue.push(config.SOUTH);
-        movesQueue.push(config.WEST);
         movesQueue.push(config.NORTH);
+        movesQueue.push(config.WEST);
         movesQueue.push(config.EAST);
 
 

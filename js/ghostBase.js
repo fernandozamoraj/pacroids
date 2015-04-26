@@ -6,15 +6,13 @@
  */
 function GhostBase(scene, config, pacman, moveHelper, imageFile, speed, aiTimer){
 
-    var sprite = new EnhancedSprite(scene, imageFile, 32, 32);
-
+    var sprite = EnhancedSprite(scene, imageFile, 32, 32);
 
     var _aiTimer = 0;
 
     sprite.log = function(message){
         //console.log(message);
     };
-
 
 
     //move towards pacman
