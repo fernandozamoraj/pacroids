@@ -16,6 +16,10 @@ function Game(){
     var _clyde;
     var _moveHelper;
 
+    this.log = function(messsage){
+        //console.log(message);
+    };
+
     this.getScene = function(){
       return _scene;
     };
@@ -70,16 +74,12 @@ function Game(){
     };
 
     this.update = function(){
-        console.log("_scene.clear");
+
         _scene.clear();
         _pacman.checkKeysAndUpdatePosition();
-        console.log("_blinky.doAI");
         _blinky.doAI();
-        console.log("_pinky.doAI");
         _pinky.doAI();
-        console.log("_clyde.doAI");
         _clyde.doAI();
-        console.log("_clyde.doAI");
 
         _maze.update();
         _pacman.update();
@@ -89,6 +89,7 @@ function Game(){
 
         _pacman.updateChildren();
         _pacman.displayPosition(_scoreBoard.getScore());
+        _blinky.displayPosition();
         _pacmanPelletCollisionDetector.update();
 
     };

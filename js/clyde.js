@@ -10,6 +10,10 @@ function Clyde(scene, config, pacman, moveHelper){
 
     var _aiTimer = 0;
 
+    sprite.log = function(message){
+          //console.log(message);
+    };
+
     sprite.init = function(){
 
         this.setPosition(config.PACMAN_START_X, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
@@ -78,8 +82,8 @@ function Clyde(scene, config, pacman, moveHelper){
         attemptTheFIrstMoveInTheQueue(this, movesQueue, originalAngle);
         cycleThroughAlternateMoves(this, movesQueue, originalAngle);
 
-        console.log("Original Angle: " + originalAngle.toString());
-        console.log("New Angle: " + this.getMoveAngle());
+        this.log("Original Angle: " + originalAngle.toString());
+        this.log("New Angle: " + this.getMoveAngle());
         moveHelper.hingeToHorizontalTrack(this);
         moveHelper.hingeToVerticalTrack(this);
 
@@ -132,7 +136,7 @@ function Clyde(scene, config, pacman, moveHelper){
         //opposite direction i.e. don't bounce off walls
         while (moveHelper.isBlocked(sprite, config.CLYDE_SPEED)) {
 
-            console.log("block on " + routes[i].toString());
+            sprite.log("block on " + routes[i].toString());
 
             //pinky must never go back where he came from...
             //i.e. don't bounce off walls

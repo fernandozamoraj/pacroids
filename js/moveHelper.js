@@ -3,9 +3,12 @@
  */
 function MoveHelper(maze, config){
 
+    this.log = function(message){
+        console.log(message);
+    };
+
     this.isBlocked = function(sprite, speed){
 
-        console.log("Entered is blocked");
         var testX = sprite.x;
         var testY = sprite.y;
 
@@ -56,20 +59,30 @@ function MoveHelper(maze, config){
         var alignmentOnY = Math.floor(sprite.y / config.TILE_HEIGHT) * config.TILE_HEIGHT+16;
         var result = false;
         var travelingMsg = "unknown travel direction";
+        var xoffset = 0;
+        var yoffset = 0;
 
         var threshold = 1;
-        console.log(sprite);
+        this.log(sprite);
         if(sprite.getMoveAngle() === config.SOUTH || sprite.getMoveAngle() === config.NORTH){
             travelingMsg = "Traveling vertically";
-            result = Math.abs( sprite.x - alignmentOnX) <= threshold;
+            yoffset = Math.abs( sprite.y - alignmentOnY);
+            this.log("Off by on Y: " + yoffset.toString());
+
+            result =  (yoffset <= threshold);
         }
 
         if(sprite.getMoveAngle() === config.EAST || sprite.getMoveAngle() == config.WEST){
             travelingMsg = "Traveling horizontally";
-            result = Math.abs( sprite.y - alignmentOnY) <= threshold;
+            xoffset = Math.abs( sprite.x - alignmentOnX);
+            this.log("off by on X: " + xoffset.toString());
+
+            result =  (xoffset <= threshold);
         }
 
-        console.log(travelingMsg);
+
+
+        this.log(travelingMsg);
 
         return result;
     };

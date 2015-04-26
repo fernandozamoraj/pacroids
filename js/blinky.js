@@ -7,6 +7,10 @@ function Blinky(scene, config, pacman, moveHelper){
 
     var _aiTimer = 0;
 
+    sprite.log = function(message){
+        //console.log(message);
+    };
+
     sprite.init = function(){
 
         this.setPosition(config.PACMAN_START_X + 64, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
@@ -79,8 +83,8 @@ function Blinky(scene, config, pacman, moveHelper){
         attemptTheFIrstMoveInTheQueue(this, movesQueue, originalAngle);
         cycleThroughAlternateMoves(this, movesQueue, originalAngle);
 
-        console.log("Original Angle: " + originalAngle.toString());
-        console.log("New Angle: " + this.getMoveAngle());
+        this.log("Original Angle: " + originalAngle.toString());
+        this.log("New Angle: " + this.getMoveAngle());
         moveHelper.hingeToHorizontalTrack(this);
         moveHelper.hingeToVerticalTrack(this);
 
@@ -101,6 +105,38 @@ function Blinky(scene, config, pacman, moveHelper){
         }
 
         return true;
+    };
+
+    var prev = {x: 0, y: 0};
+
+    //TODO: fix this later so that the score is outside
+    sprite.displayPosition = function(score){
+        var fontFamily = "courier new";
+        var fontSize = "25";
+        var fontColor = "#ffffff";
+        var textValue = "pos " + this.x.toString() + ", " + this.y.toString();
+
+        if(prev.x === 0 || prev.y === 0){
+            prev.x = this.x;
+            prev.y = this.y;
+        }
+
+        if(Math.abs(prev.x-this.x) > 0 && Math.abs(prev.y-this.y) > 0){
+
+        }
+        else{
+            prev.x = this.x;
+            prev.y = this.y;
+        }
+
+        //for debugging purposes
+        //i used this to help me find out why the turns were choppy
+        //it turns out the logic in the movehelper was wrong
+        textValue = "prev " + prev.x.toString() + ", " + prev.y.toString();
+        //this.writeText(fontFamily, fontSize, fontColor, textValue, this.x, this.y+32);
+
+        textValue = "curr " + this.x.toString() + ", " + this.y.toString();
+        //this.writeText(fontFamily, fontSize, fontColor, textValue, this.x, this.y+52);
     };
 
     function attemptTheFIrstMoveInTheQueue(sprite, routes, originalAngle) {
@@ -127,7 +163,7 @@ function Blinky(scene, config, pacman, moveHelper){
         //opposite direction i.e. don't bounce off walls
         while (moveHelper.isBlocked(sprite, config.BLINKY_SPEED)) {
 
-            console.log("block on " + routes[i].toString());
+            sprite.log("block on " + routes[i].toString());
 
             //pinky must never go back where he came from...
             //i.e. don't bounce off walls

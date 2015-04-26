@@ -69,7 +69,7 @@ function Maze(scene, config){
         var tilePath = "";
 
         for(rows = 0; rows < 22; rows++){
-            console.log("row " + rows);
+            this.log("row " + rows);
             columns = 0;
             for(; columns < 19; columns++ ){
 
@@ -86,6 +86,10 @@ function Maze(scene, config){
 
             }
         }
+    };
+
+    this.log = function(message){
+        //console.log(message);
     };
 
     this.update = function(){
@@ -115,8 +119,8 @@ function Maze(scene, config){
             return true;
         }
 
-        console.log("Row " + row);
-        console.log("Col " + column);
+        this.log("Row " + row);
+        this.log("Col " + column);
 
        return canMoveThere( row, column );
     };

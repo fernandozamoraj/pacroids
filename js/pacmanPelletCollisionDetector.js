@@ -3,6 +3,14 @@
  */
 function PacmanPelletCollisionDetector(pacman, maze, scoreBoard, soundManager){
 
+    this.log = function(message){
+        log(message);
+    };
+
+    function log(message){
+        //console.log(message);
+    }
+
     function checkIfPacmanAtePellet(){
 
         //eat pellet is a multi step process
@@ -17,14 +25,14 @@ function PacmanPelletCollisionDetector(pacman, maze, scoreBoard, soundManager){
         }
 
         if(maze.isPowerPellet(pacman.x, pacman.y)){
-            console.log("is power pellet");
+            this.log("is power pellet");
             maze.eatPellet(pacman.x, pacman.y);
             scoreBoard.updateScoreForPowerPellet();
             soundManager.playPelletAteSound();
             pacman.boostSpeed();
         }
         else{
-            console.log("is not power pellet");
+            log("is not power pellet");
         }
     }
 
