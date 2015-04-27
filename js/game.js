@@ -8,6 +8,7 @@ function Game(){
     var _maze;
     var _pacman;
     var _pacmanPelletCollisionDetector;
+    var _pacmanGhostCollisionDetector;
     var _scoreBoard;
     var _soundManager;
     var _joyStick;
@@ -16,9 +17,10 @@ function Game(){
     var _clyde;
     var _inky;
     var _moveHelper;
+    var _powerMode;
 
-    this.log = function(messsage){
-        //console.log(message);
+    this.log = function(message){
+        console.log(message);
     };
 
     this.getScene = function(){
@@ -41,7 +43,6 @@ function Game(){
         _pacmanConfig = new PacmanConfig();
 
 
-
         _scene = new Scene();
         _scene.setSize(_pacmanConfig.SCREEN_WIDTH, _pacmanConfig.SCREEN_HEIGHT);
         _scene.setBG('#000000');
@@ -49,6 +50,22 @@ function Game(){
         if(_scene.touchable){
             _joyStick = new Joy();
         }
+
+        _powerMode = {
+            ghostsCaught: 0,
+            timer: _pacmanConfig.POWER_TIME + 1,
+            update: function(){
+                if(this.timer < _pacmanConfig.POWER_TIME + 1){
+                    timer += 1;
+                }
+                else{
+                   this.ghostsCaught = 0;
+                }
+            },
+            isInPowerMode: function(){
+                return this.timer < _pacmanConfig.POWER_TIME;
+            }
+        };
 
         _maze = new Maze(_scene, _pacmanConfig );
         _moveHelper = new MoveHelper(_maze, _pacmanConfig);
@@ -61,7 +78,7 @@ function Game(){
         _scoreBoard = new ScoreBoard(_pacmanConfig);
         _soundManager = new SoundManager(_pacmanConfig);
         _pacmanPelletCollisionDetector = new PacmanPelletCollisionDetector(_pacman, _maze, _scoreBoard, _soundManager);
-
+        _pacmanGhostCollisionDetector = new PacmanGhostCollisionDetector(this, _pacman, _pinky, _blinky, _inky, _clyde);
 
     };
 
@@ -74,6 +91,7 @@ function Game(){
         _pinky.init();
         _clyde.init();
         _inky.init();
+
     };
 
     this.update = function(){
@@ -84,6 +102,8 @@ function Game(){
         _pinky.doAI();
         _clyde.doAI();
         _inky.doAI();
+
+        _pacmanGhostCollisionDetector.checkIfGhostAndPacmanCollided();
 
         _maze.update();
         _pacman.update();
@@ -97,5 +117,29 @@ function Game(){
 
         _pacmanPelletCollisionDetector.update();
 
+        _powerMode.update();
+
+    };
+
+    this.updateGhostCaught = function(){
+        _powerMode.ghostsCaught++;
+        _scoreBoard.updateScoreForGhost(_powerMode.ghostsCaught);
+    };
+
+    this.startPowerMode = function(){
+        if(powerMode.timer > config.POWER_TIMER){
+            _powerMode.ghostsCaught = 0;
+        }
+
+        _powerMode.timer = 0;
+    }
+
+    this.isInPowerMode = function(){
+        return _powerMode.isInPowerMode();
+    }
+
+
+    this.killPacman = function(){
+        _pacman.die();
     };
 }

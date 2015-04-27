@@ -9,6 +9,7 @@ function PacmanConfig(){
     this.SOUTH = 180;
     this.PACMAN_REGULAR_SPEED = 4;
     this.PACMAN_FAST_SPEED = 11;
+    this.PACMAN_DEAD_TIMER = 40;
     this.SCREEN_WIDTH = 704;
     this.SCREEN_HEIGHT = 704;
     this.PACMAN_START_X = 320;

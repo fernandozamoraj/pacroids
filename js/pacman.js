@@ -7,6 +7,17 @@ function Pacman(scene, maze, config, joyStick){
     var _powerTimer = new Timer();
     _powerTimer.start();
     var _boostedOnce = false;
+    var _deadTimer = config.PACMAN_DEAD_TIMER+1;
+
+    function isDead(){
+        return _deadTimer < config.PACMAN_DEAD_TIMER;
+    }
+
+    function updateDeadtimer(){
+        if(_deadTimer < config.PACMAN_DEAD_TIMER +1){
+            _deadTimer++;
+        }
+    }
 
     function inPowerMode(){
         return _boostedOnce && _powerTimer.getElapsedTime() < config.POWER_TIME;
@@ -145,6 +156,9 @@ function Pacman(scene, maze, config, joyStick){
 
     sprite.checkKeysAndUpdatePosition = function(){
 
+        if(isDead())
+           return;
+
         var previousSpeed;
         var previousDirection;
         this.currentSpeed = inPowerMode() ? config.PACMAN_FAST_SPEED : config.PACMAN_REGULAR_SPEED;
@@ -182,6 +196,10 @@ function Pacman(scene, maze, config, joyStick){
     sprite.updateChildren = function(){
 
     };
+
+    sprite.die = function(){
+        _deadTimer = 0;
+    }
 
     sprite.boostSpeed = function(){
         _powerTimer.reset();
