@@ -4,12 +4,17 @@
 function PacmanGhostCollisionDetector(game, pacman, pinky, blinky, inky, clyde){
 
     var ghosts = [pinky, blinky, inky, clyde];
+    var config = game.getConfig();
+
+    //using a dummy sprite instead of the pacman sprite because
+    //since the pacman sprite uses an anmiation sprite sheet it has too large an area for collision
+    var dummySprite = new EnhancedSprite(game.getScene(), config.PACMAN_FILE_2, config.TILE_WIDTH, config.TILE_HEIGHT);
 
     function detectCollision(){
 
         game.log("PGCD: entered detect collision");
         for(var i =0; i < ghosts.length; i++){
-            if(ghosts[i].collidesWith(pacman)){
+            if(ghosts[i].collidesWith(dummySprite)){
 
                 game.log("PGCD: collision detected");
                 return true;
@@ -22,6 +27,7 @@ function PacmanGhostCollisionDetector(game, pacman, pinky, blinky, inky, clyde){
     }
 
     this.checkIfGhostAndPacmanCollided = function(){
+        dummySprite.setPosition(pacman.x, pacman.y);
         var pacmanAndGhostCollided =  detectCollision();
 
         game.log("PGCD: entered checkIfGhostAndPacmanCollide");

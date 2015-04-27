@@ -2,12 +2,18 @@
  * Created by mac on 4/18/15.
  */
 function Pacman(scene, maze, config, joyStick){
-    var sprite = new EnhancedSprite(scene, config.PACMAN_FILE_2, 32, 32);
+    var sprite = new EnhancedSprite(scene, config.PACMAN_SPRITE_SHEET, 136, 34);
     var animationTimer = 0;
     var _powerTimer = new Timer();
     _powerTimer.start();
     var _boostedOnce = false;
     var _deadTimer = config.PACMAN_DEAD_TIMER+1;
+
+    sprite.loadAnimation(136, 34, 34, 34);
+    sprite.generateAnimationCycles();
+    sprite.renameCycles(new Array("east"));
+    sprite.setAnimationSpeed(200);
+    sprite.setCurrentCycle("east");
 
     function isDead(){
         return _deadTimer < config.PACMAN_DEAD_TIMER;
@@ -122,10 +128,10 @@ function Pacman(scene, maze, config, joyStick){
         animationTimer = animationTimer + 1;
 
         if (animationTimer === 1) {
-            this.setImage(config.PACMAN_FILE_2);
+            //this.setImage(config.PACMAN_FILE_2);
         }
         else if (animationTimer === 3) {
-            this.setImage(config.PACMAN_FILE_1);
+            //this.setImage(config.PACMAN_FILE_1);
         }
 
         if (animationTimer >= 5) {
@@ -204,8 +210,6 @@ function Pacman(scene, maze, config, joyStick){
     sprite.die = function(){
         _deadTimer = 0;
         this.setSpeed(0);
-        this.setImage(config.PACMAN_FILE_2);
-
     }
 
     sprite.boostSpeed = function(){

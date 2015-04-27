@@ -5,6 +5,9 @@
  expects an HTML5-compliant browser
  includes support for mobile browsers
 
+api can be found at
+ http://www.aharrisbooks.net/h5g/documentation.html
+
  Main code and design: Andy Harris - 2011/2012
  Animation and tile elements by Tyler Mitchell
  */

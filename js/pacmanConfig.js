@@ -3,6 +3,7 @@ function PacmanConfig(){
 
     this.PACMAN_FILE_1 = "./img/pacman.png";
     this.PACMAN_FILE_2 = "./img/pacman_02.png";
+    this.PACMAN_SPRITE_SHEET = "./img/pacman_sprite_sheet.png";
     this.WEST = 270;
     this.EAST = 90;
     this.NORTH = 0;

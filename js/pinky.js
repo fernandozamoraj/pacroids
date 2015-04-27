@@ -57,7 +57,6 @@ function Pinky(scene, config, pacman, moveHelper){
         movesQueue.push(config.NORTH);
         movesQueue.push(config.EAST);
 
-
         return movesQueue;
     };
 
