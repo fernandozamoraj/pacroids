@@ -156,8 +156,12 @@ function Pacman(scene, maze, config, joyStick){
 
     sprite.checkKeysAndUpdatePosition = function(){
 
-        if(isDead())
-           return;
+        if(isDead()){
+
+            this.changeImgAngleBy(20);
+            return;
+        }
+
 
         var previousSpeed;
         var previousDirection;
@@ -199,6 +203,9 @@ function Pacman(scene, maze, config, joyStick){
 
     sprite.die = function(){
         _deadTimer = 0;
+        this.setSpeed(0);
+        this.setImage(config.PACMAN_FILE_2);
+
     }
 
     sprite.boostSpeed = function(){
