@@ -1,7 +1,7 @@
 /**
  * Created by mac on 4/18/15.
  */
-function Pacman(scene, maze, config, joyStick){
+function Pacman(scene, game, maze, config, joyStick){
     var sprite = new EnhancedSprite(scene, config.PACMAN_SPRITE_SHEET, 136, 34);
     var animationTimer = 0;
     var _powerTimer = new Timer();
@@ -231,6 +231,8 @@ function Pacman(scene, maze, config, joyStick){
         var textValue = "HIGH SCORE        " + score.toString() + "        " + score.toString();
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
+        this.writeText(fontFamily, fontSize, fontColor, game.getTargetManager().getMode(), 26, 50);
+
     };
 
     return sprite;

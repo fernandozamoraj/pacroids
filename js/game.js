@@ -18,6 +18,27 @@ function Game(){
     var _inky;
     var _moveHelper;
     var _powerMode;
+    var _targetManager;
+
+    this.getTargetManager = function(){
+        return _targetManager;
+    };
+
+    this.getClydeTarget = function(){
+        return _targetManager.getClydeTarget();
+    }
+
+    this.getPinkyTarget = function(){
+        return _targetManager.getPinkyTarget();
+    }
+
+    this.getInkyTarget = function(){
+        return _targetManager.getInkyTarget();
+    }
+
+    this.getBlinkyTarget = function(){
+        return _targetManager.getBlinkyTarget();
+    }
 
     this.log = function(message){
         console.log(message);
@@ -41,6 +62,7 @@ function Game(){
 
     this.init = function(){
         _pacmanConfig = new PacmanConfig();
+
 
 
         _scene = new Scene();
@@ -69,12 +91,13 @@ function Game(){
 
         _maze = new Maze(_scene, _pacmanConfig );
         _moveHelper = new MoveHelper(_maze, _pacmanConfig);
-        _pacman = Pacman(_scene, _maze, _pacmanConfig, _joyStick);
-        _blinky = new Blinky(_scene, _pacmanConfig, _pacman, _moveHelper);
-        _pinky = new Pinky(_scene, _pacmanConfig, _pacman, _moveHelper);
-        _clyde = new Clyde(_scene, _pacmanConfig, _pacman, _moveHelper);
-        _inky = new Inky(_scene, _pacmanConfig, _pacman, _moveHelper);
+        _pacman = Pacman(_scene, this, _maze, _pacmanConfig, _joyStick);
+        _blinky = new Blinky(_scene, this, _pacmanConfig, _pacman, _moveHelper);
+        _pinky = new Pinky(_scene, this, _pacmanConfig, _pacman, _moveHelper);
+        _clyde = new Clyde(_scene, this, _pacmanConfig, _pacman, _moveHelper);
+        _inky = new Inky(_scene, this, _pacmanConfig, _pacman, _moveHelper);
 
+        _targetManager = new TargetManager(_pacman, _maze);
         _scoreBoard = new ScoreBoard(_pacmanConfig);
         _soundManager = new SoundManager(_pacmanConfig);
         _pacmanPelletCollisionDetector = new PacmanPelletCollisionDetector(_pacman, _maze, _scoreBoard, _soundManager);
@@ -103,7 +126,16 @@ function Game(){
         _clyde.doAI();
         _inky.doAI();
 
+        _targetManager.update();
+
+        //overide the normal mode in power mode
+        if(_powerMode.isInPowerMode()){
+            _targetManager.setRunMode();
+            console.log("Set run mode");
+        }
         _pacmanGhostCollisionDetector.checkIfGhostAndPacmanCollided();
+
+
 
         _maze.update();
         _pacman.update();

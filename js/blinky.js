@@ -1,9 +1,9 @@
 /**
  * Created by mac on 4/23/15.
  */
-function Blinky(scene, config, pacman, moveHelper){
+function Blinky(scene, game, config, pacman, moveHelper){
 
-    var sprite = GhostBase(scene, config, pacman, moveHelper, config.BLINKY_IMAGE_FILE, config.BLINKY_SPEED, config.BLINKY_AI_TIMER);
+    var sprite = GhostBase(scene, game, config, pacman, moveHelper, config.BLINKY_IMAGE_FILE, config.BLINKY_SPEED, config.BLINKY_AI_TIMER);
 
 
     sprite.init = function(){
@@ -22,13 +22,13 @@ function Blinky(scene, config, pacman, moveHelper){
 
         var horizontalDirection;
         var verticalDirection;
+        var blinkyTarget = game.getClydeTarget();
+        var horizontalDistance = Math.abs(blinkyTarget.x - this.x);
+        var verticalDistance = Math.abs(blinkyTarget.y - this.y);
+        var targetIsSouth = this.y < blinkyTarget.y;
+        var targetIsEastward = this.x < blinkyTarget.x;
 
-        var horizontalDistance = Math.abs(pacman.x - this.x);
-        var verticalDistance = Math.abs(pacman.y - this.y);
-        var pacmanIsSouth = this.y < pacman.y;
-        var pacmanIsEastward = this.x < pacman.x;
-
-        if(pacmanIsSouth){
+        if(targetIsSouth){
             verticalDirection = config.SOUTH;
         }
         else
@@ -36,7 +36,7 @@ function Blinky(scene, config, pacman, moveHelper){
             verticalDirection = config.NORTH;
         }
 
-        if (pacmanIsEastward) {
+        if (targetIsEastward) {
             horizontalDirection = config.EAST;
         }
         else {
@@ -59,7 +59,6 @@ function Blinky(scene, config, pacman, moveHelper){
         movesQueue.push(config.WEST);
         movesQueue.push(config.NORTH);
         movesQueue.push(config.EAST);
-
 
         return movesQueue;
     };

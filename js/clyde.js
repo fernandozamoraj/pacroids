@@ -4,9 +4,9 @@
 /**
  * Created by mac on 4/23/15.
  */
-function Clyde(scene, config, pacman, moveHelper){
+function Clyde(scene, game, config, pacman, moveHelper){
 
-    var sprite = GhostBase(scene, config, pacman, moveHelper, config.CLYDE_IMAGE_FILE, config.CLYDE_SPEED, config.CLYDE_AI_TIMER);
+    var sprite = GhostBase(scene, game, config, pacman, moveHelper, config.CLYDE_IMAGE_FILE, config.CLYDE_SPEED, config.CLYDE_AI_TIMER);
 
     sprite.init = function(){
 
@@ -20,14 +20,15 @@ function Clyde(scene, config, pacman, moveHelper){
     sprite.createPossibleMovesQueue =  function(){
         var movesQueue = [];
 
-        var pacmanIsSouth = this.y < pacman.y;
-        var pacmanIsEastward = this.x < pacman.x;
+        var clydeTarget = game.getClydeTarget();
+        var targetIsSouth = this.y < clydeTarget.y;
+        var targetIsEastward = this.x < clydeTarget.x;
 
-        if(pacmanIsSouth){
+        if(targetIsSouth){
             movesQueue.push(config.SOUTH);
         }
 
-        if(pacmanIsEastward){
+        if(targetIsEastward){
             movesQueue.push(config.EAST);
         }
 

@@ -4,7 +4,7 @@
 /**
  * Created by mac on 4/23/15.
  */
-function GhostBase(scene, config, pacman, moveHelper, imageFile, speed, aiTimer){
+function GhostBase(scene, game, config, pacman, moveHelper, imageFile, speed, aiTimer){
 
     var sprite = EnhancedSprite(scene, imageFile, 32, 32);
 

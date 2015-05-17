@@ -7,9 +7,9 @@
 /**
  * Created by mac on 4/23/15.
  */
-function Inky(scene, config, pacman, moveHelper){
+function Inky(scene, game, config, pacman, moveHelper){
 
-    var sprite = GhostBase(scene, config, pacman, moveHelper, config.INKY_IMAGE_FILE, config.INKY_SPEED, config.INKY_AI_TIMER);
+    var sprite = GhostBase(scene, game, config, pacman, moveHelper, config.INKY_IMAGE_FILE, config.INKY_SPEED, config.INKY_AI_TIMER);
 
     sprite.init = function(){
         this.setPosition(config.PACMAN_START_X, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
@@ -21,15 +21,15 @@ function Inky(scene, config, pacman, moveHelper){
     //close the bigger distance
     sprite.createPossibleMovesQueue =  function(){
         var movesQueue = [];
+        var inkyTarget = game.getInkyTarget();
+        var targetIsSouth = this.y < inkyTarget.y;
+        var targetIsEastward = this.x < inkyTarget.x;
 
-        var pacmanIsSouth = this.y < pacman.y;
-        var pacmanIsEastward = this.x < pacman.x;
-
-        if(pacmanIsEastward){
+        if(targetIsEastward){
             movesQueue.push(config.EAST);
         }
 
-        if(pacmanIsSouth){
+        if(targetIsSouth){
             movesQueue.push(config.SOUTH);
         }
 
@@ -41,7 +41,6 @@ function Inky(scene, config, pacman, moveHelper){
         movesQueue.push(config.WEST);
         movesQueue.push(config.SOUTH);
         movesQueue.push(config.NORTH);
-
 
         return movesQueue;
     };
