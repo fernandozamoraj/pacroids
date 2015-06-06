@@ -17,6 +17,7 @@ function TargetManager(pacman, maze){
 
     var timer = 0;
     var mode = "UNDEF";
+    var attackMode = false;
 
     this.setAttackMode = function() {
         mode = "Attack Mode";
@@ -114,7 +115,7 @@ function TargetManager(pacman, maze){
             toggleMode();
         }
 
-        if(mode == "Attack Mode"){
+        if(attackMode === true){
             this.setAttackMode();
         }
         else{
