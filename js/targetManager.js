@@ -115,11 +115,17 @@ function TargetManager(pacman, maze){
             toggleMode();
         }
 
-        if(attackMode === true){
+        if(mode == "Attack Mode"){
             this.setAttackMode();
         }
-        else{
+        else if(mode == "Guard Mode"){
             this.setGuardMode();
+        }
+        else if(mode == "Run Mode"){
+            this.setRunMode();
+        }
+        else{
+            this.setAttackMode();
         }
 
         if(timer > 1400){

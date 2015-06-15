@@ -71,6 +71,12 @@ function GhostBase(scene, game, config, pacman, moveHelper, imageFile, speed, ai
             return;
 
 
+        if(game.getTargetManager().getMode() === 'Run Mode' ){
+            this.setImage(config.BLUE_IMAGE_FILE);
+        }
+        else{
+            this.setImage(imageFile);
+        }
 
         var originalAngle = this.getMoveAngle();
         var movesQueue = this.createPossibleMovesQueue();

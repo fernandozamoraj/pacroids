@@ -1,7 +1,7 @@
 /**
  * Created by mac on 4/22/15.
  */
-function PacmanPelletCollisionDetector(pacman, maze, scoreBoard, soundManager){
+function PacmanPelletCollisionDetector(pacman, game, maze, scoreBoard, soundManager){
 
     this.log = function(message){
         log(message);
@@ -30,6 +30,8 @@ function PacmanPelletCollisionDetector(pacman, maze, scoreBoard, soundManager){
             scoreBoard.updateScoreForPowerPellet();
             soundManager.playPelletAteSound();
             pacman.boostSpeed();
+            game.getTargetManager().setRunMode();
+            game.getPowerMode().start();
         }
         else{
             log("is not power pellet");

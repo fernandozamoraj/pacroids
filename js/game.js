@@ -19,6 +19,7 @@ function Game(){
     var _moveHelper;
     var _powerMode;
     var _targetManager;
+    var _lastMode = "undef";
 
     this.getTargetManager = function(){
         return _targetManager;
@@ -60,6 +61,10 @@ function Game(){
         return _pacman;
     };
 
+    this.getPowerMode = function(){
+      return _powerMode;
+    };
+
     this.init = function(){
         _pacmanConfig = new PacmanConfig();
 
@@ -78,7 +83,7 @@ function Game(){
             timer: _pacmanConfig.POWER_TIME + 1,
             update: function(){
                 if(this.timer < _pacmanConfig.POWER_TIME + 1){
-                    timer += 1;
+                    this.timer += 1;
                 }
                 else{
                    this.ghostsCaught = 0;
@@ -86,6 +91,9 @@ function Game(){
             },
             isInPowerMode: function(){
                 return this.timer < _pacmanConfig.POWER_TIME;
+            },
+            start: function(){
+                this.timer = 0;
             }
         };
 
@@ -100,7 +108,7 @@ function Game(){
         _targetManager = new TargetManager(_pacman, _maze);
         _scoreBoard = new ScoreBoard(_pacmanConfig);
         _soundManager = new SoundManager(_pacmanConfig);
-        _pacmanPelletCollisionDetector = new PacmanPelletCollisionDetector(_pacman, _maze, _scoreBoard, _soundManager);
+        _pacmanPelletCollisionDetector = new PacmanPelletCollisionDetector(_pacman, this, _maze, _scoreBoard, _soundManager);
         _pacmanGhostCollisionDetector = new PacmanGhostCollisionDetector(this, _pacman, _pinky, _blinky, _inky, _clyde);
 
     };
@@ -128,11 +136,17 @@ function Game(){
 
         _targetManager.update();
 
+
         //overide the normal mode in power mode
         if(_powerMode.isInPowerMode()){
             _targetManager.setRunMode();
             console.log("Set run mode");
+        }//switch back to attack mode after running
+        else if(_lastMode == "Run Mode"){
+            _targetManager.setAttackMode();
         }
+
+
         _pacmanGhostCollisionDetector.checkIfGhostAndPacmanCollided();
 
 
@@ -150,6 +164,8 @@ function Game(){
         _pacmanPelletCollisionDetector.update();
 
         _powerMode.update();
+        _lastMode = _targetManager.getMode();
+
 
     };
 

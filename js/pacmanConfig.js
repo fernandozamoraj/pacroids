@@ -26,11 +26,14 @@ function PacmanConfig(){
     this.POINTS_FOR_PELLET = 10;
     this.POINTS_FOR_POWER_PELLET = 50;
     this.POINTS_FOR_GHOST = 200;
-    this.POWER_TIME = 10;
+    this.POWER_TIME = 160;
+
     this.BLINKY_IMAGE_FILE = "./img/blinky.png";
     this.PINKY_IMAGE_FILE = "./img/pinky.png";
     this.INKY_IMAGE_FILE = "./img/inky.png";
     this.CLYDE_IMAGE_FILE = "./img/clyde.png";
+    this.BLUE_IMAGE_FILE = "./img/blue.png";
+
     this.PINKY_AI_TIMER = 10;
     this.BLINKY_AI_TIMER = 20;
     this.INKY_AI_TIMER = 60;
