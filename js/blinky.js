@@ -5,7 +5,6 @@ function Blinky(scene, game, config, pacman, moveHelper){
 
     var sprite = GhostBase(scene, game, config, pacman, moveHelper, config.BLINKY_IMAGE_FILE, config.BLINKY_SPEED, config.BLINKY_AI_TIMER);
 
-
     sprite.init = function(){
 
         this.setPosition(config.PACMAN_START_X + 64, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));

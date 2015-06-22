@@ -26,7 +26,7 @@ function PacmanConfig(){
     this.POINTS_FOR_PELLET = 10;
     this.POINTS_FOR_POWER_PELLET = 50;
     this.POINTS_FOR_GHOST = 200;
-    this.POWER_TIME = 160;
+    this.POWER_TIME = 200;
 
     this.BLINKY_IMAGE_FILE = "./img/blinky.png";
     this.PINKY_IMAGE_FILE = "./img/pinky.png";

@@ -68,8 +68,6 @@ function Game(){
     this.init = function(){
         _pacmanConfig = new PacmanConfig();
 
-
-
         _scene = new Scene();
         _scene.setSize(_pacmanConfig.SCREEN_WIDTH, _pacmanConfig.SCREEN_HEIGHT);
         _scene.setBG('#000000');
@@ -135,8 +133,6 @@ function Game(){
         _inky.doAI();
 
         _targetManager.update();
-
-
         //overide the normal mode in power mode
         if(_powerMode.isInPowerMode()){
             _targetManager.setRunMode();
@@ -145,12 +141,7 @@ function Game(){
         else if(_lastMode == "Run Mode"){
             _targetManager.setAttackMode();
         }
-
-
         _pacmanGhostCollisionDetector.checkIfGhostAndPacmanCollided();
-
-
-
         _maze.update();
         _pacman.update();
         _blinky.update();
@@ -165,13 +156,12 @@ function Game(){
 
         _powerMode.update();
         _lastMode = _targetManager.getMode();
-
-
     };
 
-    this.updateGhostCaught = function(){
+    this.updateGhostCaught = function(ghost){
         _powerMode.ghostsCaught++;
         _scoreBoard.updateScoreForGhost(_powerMode.ghostsCaught);
+        ghost.resetPosition();
     };
 
     this.startPowerMode = function(){

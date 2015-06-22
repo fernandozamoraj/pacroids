@@ -7,13 +7,15 @@
 function GhostBase(scene, game, config, pacman, moveHelper, imageFile, speed, aiTimer){
 
     var sprite = EnhancedSprite(scene, imageFile, 32, 32);
-
     var _aiTimer = 0;
 
     sprite.log = function(message){
         //console.log(message);
     };
 
+    sprite.resetPosition = function(){
+        this.setPosition(config.PACMAN_START_X + 64, (config.PACMAN_START_Y - (8*config.TILE_HEIGHT)));
+    }
 
     //move towards pacman
     //close the bigger distance
@@ -60,13 +62,10 @@ function GhostBase(scene, game, config, pacman, moveHelper, imageFile, speed, ai
         movesQueue.push(config.NORTH);
         movesQueue.push(config.EAST);
 
-
         return movesQueue;
     };
 
     sprite.doAI = function(){
-
-
         if(this.aiIsALlowedAtThisMoment() === false)
             return;
 
@@ -110,9 +109,7 @@ function GhostBase(scene, game, config, pacman, moveHelper, imageFile, speed, ai
     };
 
     function attemptTheFIrstMoveInTheQueue(sprite, routes, originalAngle) {
-
-
-        //turn left or right from current direction
+       //turn left or right from current direction
         //if (routes[0] != oppositeAngle(originalAngle)) {
             sprite.setMoveAngle(routes[0]);
         //}
@@ -145,9 +142,7 @@ function GhostBase(scene, game, config, pacman, moveHelper, imageFile, speed, ai
 
             i++;
         }
-
     }
-
 
     function oppositeAngle(angle){
         return moveHelper.oppositeAngle(angle);

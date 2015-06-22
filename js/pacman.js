@@ -26,7 +26,7 @@ function Pacman(scene, game, maze, config, joyStick){
     }
 
     function inPowerMode(){
-        return _boostedOnce && _powerTimer.getElapsedTime() < config.POWER_TIME;
+        return _boostedOnce && game.getPowerMode().isInPowerMode();
     }
 
     function getDirectionFromSwipeInput(direction) {
@@ -167,8 +167,6 @@ function Pacman(scene, game, maze, config, joyStick){
             this.changeImgAngleBy(20);
             return;
         }
-
-
         var previousSpeed;
         var previousDirection;
         this.currentSpeed = inPowerMode() ? config.PACMAN_FAST_SPEED : config.PACMAN_REGULAR_SPEED;
@@ -232,7 +230,6 @@ function Pacman(scene, game, maze, config, joyStick){
 
         this.writeText(fontFamily, fontSize, fontColor, textValue, 26, 20);
         this.writeText(fontFamily, fontSize, fontColor, game.getTargetManager().getMode(), 26, 50);
-
     };
 
     return sprite;
