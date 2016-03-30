@@ -5,7 +5,7 @@ This app is deployed to [http://pacroids.apphb.com/main.html](http://pacroids.ap
 
 This game is a pacman clone that is written using pure JavaScript and the simple game javascript game engine.
 
-The game is not finished.  It can certainly be finished up by due to other priorities I simply didn't get around to finishing it.
+The game is not finished.  It can certainly be finished up but due to other priorities I simply didn't get around to finishing it.
 
 All the logic for the game, algorithms, AI, data structures, are my original thoughts and ideas.  
 I have no idea what any one else's code looks like.
