@@ -13,11 +13,11 @@ All I can say is that I wrote this one from scratch.
 
 There are simply too many things that it needs to be completed to list but I'll try:
 
-  *The level must finish.
-  *Ghosts must flash white and blue as power pellet time runs out
-  *Provide additional lives for pacman.
-  *Pacman must die properly instead it simply ends the game for now
-  *The only way to refresh the game is to refresh the page.
+  * The level must finish.
+  * Ghosts must flash white and blue as power pellet time runs out
+  * Provide additional lives for pacman.
+  * Pacman must die properly instead it simply ends the game for now
+  * The only way to refresh the game is to refresh the page.
 
 Give it a try and maybe you may give it a shot at fixing some of the issues.
 
